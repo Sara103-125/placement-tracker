@@ -9,6 +9,7 @@ import {
   STATUSES,
   StatusChange,
 } from '../../models/job-application';
+import { ApplicationEvents } from '../../components/application-events/application-events';
 import { ApplicationService } from '../../services/application.service';
 
 /**
@@ -18,7 +19,7 @@ import { ApplicationService } from '../../services/application.service';
  */
 @Component({
   selector: 'app-application-form',
-  imports: [ReactiveFormsModule, RouterLink, DatePipe],
+  imports: [ReactiveFormsModule, RouterLink, DatePipe, ApplicationEvents],
   templateUrl: './application-form.html',
   styleUrl: './application-form.css',
 })

@@ -1,0 +1,54 @@
+<section class="auth-page">
+  <div class="auth-card card">
+    <span class="brand-logo" aria-hidden="true">PT</span>
+    <h1>{{ mode === 'login' ? 'Log in to Placement Tracker' : 'Create your account' }}</h1>
+    <p class="subtitle">
+      {{ mode === 'login' ? 'Welcome back. Pick up where you left off.' : 'Free, and your applications stay private to you.' }}
+    </p>
+
+    <form [formGroup]="form" (ngSubmit)="submit()" novalidate>
+      <div class="field">
+        <label for="email">Email</label>
+        <input id="email" type="email" formControlName="email" autocomplete="email" />
+        @if (showError('email')) {
+          <span class="error">Enter a valid email address.</span>
+        }
+      </div>
+
+      <div class="field">
+        <label for="password">Password</label>
+        <input
+          id="password"
+          type="password"
+          formControlName="password"
+          [attr.autocomplete]="mode === 'login' ? 'current-password' : 'new-password'"
+        />
+        @if (showError('password')) {
+          <span class="error">Password must be at least 8 characters.</span>
+        } @else if (mode === 'register') {
+          <span class="hint">At least 8 characters.</span>
+        }
+      </div>
+
+      @if (errorMessage()) {
+        <p class="form-error" role="alert">{{ errorMessage() }}</p>
+      }
+
+      <button type="submit" class="btn btn-primary submit" [disabled]="submitting()">
+        @if (submitting()) {
+          Please wait…
+        } @else {
+          {{ mode === 'login' ? 'Log in' : 'Create account' }}
+        }
+      </button>
+    </form>
+
+    <p class="switch">
+      @if (mode === 'login') {
+        New here? <a routerLink="/register">Create an account</a>
+      } @else {
+        Already have an account? <a routerLink="/login">Log in</a>
+      }
+    </p>
+  </div>
+</section>

@@ -1,14 +1,26 @@
 <header class="app-header">
   <div class="container header-inner">
-    <a routerLink="/" class="brand">
+    <a [routerLink]="auth.isLoggedIn() ? '/dashboard' : '/'" class="brand">
       <span class="brand-logo" aria-hidden="true">PT</span>
       Placement Tracker
     </a>
-    <nav>
-      <a routerLink="/dashboard" routerLinkActive="active">Dashboard</a>
-      <a routerLink="/applications" routerLinkActive="active">Applications</a>
-      <a routerLink="/board" routerLinkActive="active">Board</a>
-    </nav>
+
+    @if (auth.isLoggedIn()) {
+      <nav>
+        <a routerLink="/dashboard" routerLinkActive="active">Dashboard</a>
+        <a routerLink="/applications" routerLinkActive="active">Applications</a>
+        <a routerLink="/board" routerLinkActive="active">Board</a>
+      </nav>
+      <div class="account">
+        <span class="account-email" [title]="auth.email()">{{ auth.email() }}</span>
+        <button type="button" class="btn btn-small btn-secondary" (click)="auth.logout()">Log out</button>
+      </div>
+    } @else {
+      <div class="account">
+        <a routerLink="/login" class="btn btn-small btn-secondary">Log in</a>
+        <a routerLink="/register" class="btn btn-small btn-primary">Sign up</a>
+      </div>
+    }
   </div>
 </header>
 

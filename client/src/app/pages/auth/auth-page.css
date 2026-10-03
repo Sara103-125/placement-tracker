@@ -1,0 +1,87 @@
+.auth-page {
+  display: flex;
+  justify-content: center;
+  padding-top: 3rem;
+}
+
+.auth-card {
+  width: 100%;
+  max-width: 380px;
+  padding: 1.75rem 1.5rem 1.5rem;
+}
+
+.brand-logo {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  margin-bottom: 1rem;
+  border-radius: 8px;
+  background: var(--primary);
+  color: #fff;
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+h1 {
+  font-size: 1.15rem;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+  margin-top: 1.25rem;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+label {
+  font-size: 0.78rem;
+  font-weight: 500;
+  color: var(--text-muted);
+}
+
+input.ng-invalid.ng-touched {
+  border-color: var(--danger);
+}
+
+.error {
+  font-size: 0.75rem;
+  color: var(--danger);
+}
+
+.hint {
+  font-size: 0.75rem;
+  color: var(--text-faint);
+}
+
+.form-error {
+  margin: 0;
+  padding: 0.55rem 0.7rem;
+  border-radius: 6px;
+  background: rgba(248, 113, 113, 0.1);
+  color: var(--danger);
+  font-size: 0.8rem;
+}
+
+.submit {
+  justify-content: center;
+  padding: 0.6rem;
+}
+
+.switch {
+  margin: 1.25rem 0 0;
+  text-align: center;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
+.switch a {
+  color: var(--primary-hover);
+  font-weight: 500;
+}

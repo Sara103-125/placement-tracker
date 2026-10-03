@@ -1,0 +1,83 @@
+<div class="events card">
+  <div class="events-header">
+    <h2>Interviews &amp; events</h2>
+    @if (!adding()) {
+      <button type="button" class="btn btn-small btn-secondary" (click)="adding.set(true)">+ Add event</button>
+    }
+  </div>
+
+  @if (adding()) {
+    <form [formGroup]="form" (ngSubmit)="add()" novalidate class="event-form">
+      <div class="field">
+        <label for="eventTitle">Title</label>
+        <input id="eventTitle" formControlName="title" placeholder="e.g. Technical interview" />
+        @if (showError('title')) {
+          <span class="error">Title is required.</span>
+        }
+      </div>
+
+      <div class="field">
+        <label for="eventType">Type</label>
+        <select id="eventType" formControlName="type">
+          @for (type of eventTypes; track type) {
+            <option [value]="type">{{ typeLabels[type] }}</option>
+          }
+        </select>
+      </div>
+
+      <div class="field">
+        <label for="eventStartsAt">Date &amp; time</label>
+        <input id="eventStartsAt" type="datetime-local" formControlName="startsAt" />
+        @if (showError('startsAt')) {
+          <span class="error">Choose a date and time.</span>
+        }
+      </div>
+
+      <div class="field full">
+        <label for="eventNotes">Notes (optional)</label>
+        <input id="eventNotes" formControlName="notes" placeholder="e.g. Teams link, who you're meeting" />
+      </div>
+
+      @if (errorMessage()) {
+        <p class="form-error full">{{ errorMessage() }}</p>
+      }
+
+      <div class="event-actions full">
+        <button type="button" class="btn btn-small btn-secondary" (click)="adding.set(false)">Cancel</button>
+        <button type="submit" class="btn btn-small btn-primary" [disabled]="saving()">
+          {{ saving() ? 'Adding…' : 'Add event' }}
+        </button>
+      </div>
+    </form>
+  }
+
+  @if (events().length === 0 && !adding()) {
+    <p class="empty">No interviews or tests scheduled yet.</p>
+  } @else {
+    <ul class="event-list">
+      @for (event of events(); track event.id) {
+        <li [class.past]="isPast(event)">
+          <div class="event-date">
+            <span class="day">{{ event.startsAt | date: 'd' }}</span>
+            <span class="month">{{ event.startsAt | date: 'MMM' }}</span>
+          </div>
+          <div class="event-main">
+            <div>
+              <span class="event-title">{{ event.title }}</span>
+              <span class="event-type">{{ typeLabels[event.type] }}</span>
+            </div>
+            <div class="muted">
+              {{ event.startsAt | date: 'EEE d MMM yyyy, HH:mm' }}
+              @if (event.notes) {
+                · {{ event.notes }}
+              }
+            </div>
+          </div>
+          <button type="button" class="btn btn-small btn-danger" (click)="remove(event)" [attr.aria-label]="'Delete ' + event.title">
+            Delete
+          </button>
+        </li>
+      }
+    </ul>
+  }
+</div>

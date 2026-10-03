@@ -18,7 +18,8 @@ public class ApplicationsControllerTests
     public async Task Create_SavesApplication_AndReturns201()
     {
         using var db = TestDb.Create();
-        var controller = new ApplicationsController(db);
+        var userId = TestDb.AddUser(db);
+        var controller = new ApplicationsController(db).As(userId);
 
         var result = await controller.Create(NewRequest(company: "  Google  "));
 
@@ -33,7 +34,8 @@ public class ApplicationsControllerTests
     public async Task GetById_ReturnsNotFound_WhenApplicationDoesNotExist()
     {
         using var db = TestDb.Create();
-        var controller = new ApplicationsController(db);
+        var userId = TestDb.AddUser(db);
+        var controller = new ApplicationsController(db).As(userId);
 
         var result = await controller.GetById(999);
 
@@ -44,7 +46,8 @@ public class ApplicationsControllerTests
     public async Task Update_ChangesFields()
     {
         using var db = TestDb.Create();
-        var controller = new ApplicationsController(db);
+        var userId = TestDb.AddUser(db);
+        var controller = new ApplicationsController(db).As(userId);
         await controller.Create(NewRequest());
         var id = db.JobApplications.Single().Id;
 
@@ -61,7 +64,8 @@ public class ApplicationsControllerTests
     public async Task Update_ReturnsNotFound_WhenApplicationDoesNotExist()
     {
         using var db = TestDb.Create();
-        var controller = new ApplicationsController(db);
+        var userId = TestDb.AddUser(db);
+        var controller = new ApplicationsController(db).As(userId);
 
         var result = await controller.Update(999, NewRequest());
 
@@ -72,7 +76,8 @@ public class ApplicationsControllerTests
     public async Task Delete_RemovesApplication()
     {
         using var db = TestDb.Create();
-        var controller = new ApplicationsController(db);
+        var userId = TestDb.AddUser(db);
+        var controller = new ApplicationsController(db).As(userId);
         await controller.Create(NewRequest());
         var id = db.JobApplications.Single().Id;
 
@@ -86,7 +91,8 @@ public class ApplicationsControllerTests
     public async Task GetAll_SearchMatchesCompanyOrRole()
     {
         using var db = TestDb.Create();
-        var controller = new ApplicationsController(db);
+        var userId = TestDb.AddUser(db);
+        var controller = new ApplicationsController(db).As(userId);
         await controller.Create(NewRequest(company: "Google", role: "SWE Intern"));
         await controller.Create(NewRequest(company: "Amazon", role: "Data Intern"));
         await controller.Create(NewRequest(company: "Monzo", role: "Backend Intern"));
@@ -102,7 +108,8 @@ public class ApplicationsControllerTests
     public async Task Create_RecordsStartingStatusInHistory()
     {
         using var db = TestDb.Create();
-        var controller = new ApplicationsController(db);
+        var userId = TestDb.AddUser(db);
+        var controller = new ApplicationsController(db).As(userId);
 
         await controller.Create(NewRequest());
 
@@ -114,7 +121,8 @@ public class ApplicationsControllerTests
     public async Task UpdateStatus_ChangesStatus_AndAddsHistoryEntry()
     {
         using var db = TestDb.Create();
-        var controller = new ApplicationsController(db);
+        var userId = TestDb.AddUser(db);
+        var controller = new ApplicationsController(db).As(userId);
         await controller.Create(NewRequest());
         var id = db.JobApplications.Single().Id;
 
@@ -131,7 +139,8 @@ public class ApplicationsControllerTests
     public async Task Update_WithSameStatus_DoesNotAddHistoryEntry()
     {
         using var db = TestDb.Create();
-        var controller = new ApplicationsController(db);
+        var userId = TestDb.AddUser(db);
+        var controller = new ApplicationsController(db).As(userId);
         await controller.Create(NewRequest());
         var id = db.JobApplications.Single().Id;
 
@@ -146,7 +155,8 @@ public class ApplicationsControllerTests
     public async Task UpdateStatus_ReturnsNotFound_WhenApplicationDoesNotExist()
     {
         using var db = TestDb.Create();
-        var controller = new ApplicationsController(db);
+        var userId = TestDb.AddUser(db);
+        var controller = new ApplicationsController(db).As(userId);
 
         var result = await controller.UpdateStatus(999, new UpdateStatusRequest { Status = ApplicationStatus.Offer });
 
@@ -157,7 +167,8 @@ public class ApplicationsControllerTests
     public async Task GetAll_FiltersByStatus()
     {
         using var db = TestDb.Create();
-        var controller = new ApplicationsController(db);
+        var userId = TestDb.AddUser(db);
+        var controller = new ApplicationsController(db).As(userId);
         var offer = NewRequest(company: "Microsoft");
         offer.Status = ApplicationStatus.Offer;
         await controller.Create(offer);

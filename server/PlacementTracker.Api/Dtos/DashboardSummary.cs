@@ -17,6 +17,9 @@ public class DashboardSummary
 
     /// <summary>Applications with a deadline from today up to 7 days ahead, soonest first.</summary>
     public List<JobApplication> UpcomingDeadlines { get; set; } = new();
+
+    /// <summary>Interviews, tests and calls in the next 7 days, soonest first.</summary>
+    public List<UpcomingEvent> UpcomingEvents { get; set; } = new();
 }
 
 public class FunnelStep

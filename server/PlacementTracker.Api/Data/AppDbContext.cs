@@ -16,6 +16,8 @@ public class AppDbContext : DbContext
 
     public DbSet<JobApplication> JobApplications => Set<JobApplication>();
     public DbSet<StatusChange> StatusChanges => Set<StatusChange>();
+    public DbSet<ApplicationEvent> ApplicationEvents => Set<ApplicationEvent>();
+    public DbSet<User> Users => Set<User>();
 
     protected override void ConfigureConventions(ModelConfigurationBuilder configurationBuilder)
     {
@@ -52,6 +54,18 @@ public class AppDbContext : DbContext
                 .WithOne()
                 .HasForeignKey(s => s.JobApplicationId)
                 .OnDelete(DeleteBehavior.Cascade);
+
+            // ...and many events, deleted along with it.
+            entity.HasMany(e => e.Events)
+                .WithOne()
+                .HasForeignKey(ev => ev.JobApplicationId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            // Each application belongs to one user. Deleting a user deletes their applications.
+            entity.HasOne<User>()
+                .WithMany()
+                .HasForeignKey(e => e.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
         });
 
         builder.Entity<StatusChange>(entity =>
@@ -59,6 +73,21 @@ public class AppDbContext : DbContext
             entity.Property(e => e.Status)
                 .HasConversion<string>()
                 .HasMaxLength(32);
+        });
+
+        builder.Entity<ApplicationEvent>(entity =>
+        {
+            entity.Property(e => e.Title).HasMaxLength(200).IsRequired();
+            entity.Property(e => e.Notes).HasMaxLength(2000);
+            entity.Property(e => e.Type)
+                .HasConversion<string>()
+                .HasMaxLength(32);
+        });
+
+        builder.Entity<User>(entity =>
+        {
+            entity.Property(e => e.Email).HasMaxLength(256).IsRequired();
+            entity.HasIndex(e => e.Email).IsUnique(); // no two accounts with the same email
         });
     }
 }

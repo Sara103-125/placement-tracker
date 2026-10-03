@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
+import { AuthService } from './services/auth.service';
 
 /** The app shell: header + navigation, with the current page shown in <router-outlet>. */
 @Component({
@@ -7,4 +8,6 @@ import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
   imports: [RouterOutlet, RouterLink, RouterLinkActive],
   templateUrl: './app.html',
 })
-export class App {}
+export class App {
+  protected readonly auth = inject(AuthService);
+}

@@ -2,6 +2,8 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
 import {
+  ApplicationEvent,
+  ApplicationEventRequest,
   ApplicationStatus,
   DashboardSummary,
   JobApplication,
@@ -58,5 +60,17 @@ export class ApplicationService {
 
   getDashboardSummary(): Observable<DashboardSummary> {
     return this.http.get<DashboardSummary>('/api/dashboard/summary');
+  }
+
+  getEvents(applicationId: number): Observable<ApplicationEvent[]> {
+    return this.http.get<ApplicationEvent[]>(`${this.baseUrl}/${applicationId}/events`);
+  }
+
+  addEvent(applicationId: number, request: ApplicationEventRequest): Observable<ApplicationEvent> {
+    return this.http.post<ApplicationEvent>(`${this.baseUrl}/${applicationId}/events`, request);
+  }
+
+  deleteEvent(applicationId: number, eventId: number): Observable<void> {
+    return this.http.delete<void>(`${this.baseUrl}/${applicationId}/events/${eventId}`);
   }
 }

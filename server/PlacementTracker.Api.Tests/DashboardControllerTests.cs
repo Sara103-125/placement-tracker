@@ -6,8 +6,9 @@ namespace PlacementTracker.Api.Tests;
 
 public class DashboardControllerTests
 {
-    private static JobApplication NewApplication(string company, ApplicationStatus status, DateOnly? deadline = null) => new()
+    private static JobApplication NewApplication(int userId, string company, ApplicationStatus status, DateOnly? deadline = null) => new()
     {
+        UserId = userId,
         Company = company,
         Role = "Intern",
         Status = status,
@@ -18,13 +19,14 @@ public class DashboardControllerTests
     public async Task GetSummary_CountsEveryStatus_IncludingZeros()
     {
         using var db = TestDb.Create();
+        var userId = TestDb.AddUser(db);
         db.JobApplications.AddRange(
-            NewApplication("Google", ApplicationStatus.Applied),
-            NewApplication("Amazon", ApplicationStatus.Applied),
-            NewApplication("Microsoft", ApplicationStatus.Offer));
+            NewApplication(userId, "Google", ApplicationStatus.Applied),
+            NewApplication(userId, "Amazon", ApplicationStatus.Applied),
+            NewApplication(userId, "Microsoft", ApplicationStatus.Offer));
         await db.SaveChangesAsync();
 
-        var summary = (await new DashboardController(db).GetSummary()).Value!;
+        var summary = (await new DashboardController(db).As(userId).GetSummary()).Value!;
 
         Assert.Equal(3, summary.Total);
         Assert.Equal(2, summary.StatusCounts[ApplicationStatus.Applied]);
@@ -37,7 +39,8 @@ public class DashboardControllerTests
     public async Task GetSummary_Funnel_CountsTheFurthestStageEachApplicationReached()
     {
         using var db = TestDb.Create();
-        var controller = new ApplicationsController(db);
+        var userId = TestDb.AddUser(db);
+        var controller = new ApplicationsController(db).As(userId);
 
         // A: Applied only.  B: Applied -> Interview -> Rejected.  C: Applied -> Online Test -> Interview -> Offer.
         await controller.Create(new JobApplicationRequest { Company = "A", Role = "Intern", Status = ApplicationStatus.Applied });
@@ -51,7 +54,7 @@ public class DashboardControllerTests
         await controller.UpdateStatus(c, new UpdateStatusRequest { Status = ApplicationStatus.Interview });
         await controller.UpdateStatus(c, new UpdateStatusRequest { Status = ApplicationStatus.Offer });
 
-        var summary = (await new DashboardController(db).GetSummary()).Value!;
+        var summary = (await new DashboardController(db).As(userId).GetSummary()).Value!;
         var funnel = summary.Funnel.ToDictionary(f => f.Status, f => f.Count);
 
         Assert.Equal(3, funnel[ApplicationStatus.Applied]);
@@ -64,16 +67,17 @@ public class DashboardControllerTests
     public async Task GetSummary_UpcomingDeadlines_OnlyIncludesTodayToSevenDaysAhead_SoonestFirst()
     {
         using var db = TestDb.Create();
+        var userId = TestDb.AddUser(db);
         var today = DateOnly.FromDateTime(DateTime.Today);
         db.JobApplications.AddRange(
-            NewApplication("Yesterday", ApplicationStatus.Applied, today.AddDays(-1)),
-            NewApplication("In7Days", ApplicationStatus.Applied, today.AddDays(7)),
-            NewApplication("Today", ApplicationStatus.Applied, today),
-            NewApplication("In8Days", ApplicationStatus.Applied, today.AddDays(8)),
-            NewApplication("NoDeadline", ApplicationStatus.Applied));
+            NewApplication(userId, "Yesterday", ApplicationStatus.Applied, today.AddDays(-1)),
+            NewApplication(userId, "In7Days", ApplicationStatus.Applied, today.AddDays(7)),
+            NewApplication(userId, "Today", ApplicationStatus.Applied, today),
+            NewApplication(userId, "In8Days", ApplicationStatus.Applied, today.AddDays(8)),
+            NewApplication(userId, "NoDeadline", ApplicationStatus.Applied));
         await db.SaveChangesAsync();
 
-        var summary = (await new DashboardController(db).GetSummary()).Value!;
+        var summary = (await new DashboardController(db).As(userId).GetSummary()).Value!;
 
         Assert.Equal(new[] { "Today", "In7Days" }, summary.UpcomingDeadlines.Select(a => a.Company));
     }

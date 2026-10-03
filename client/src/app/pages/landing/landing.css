@@ -1,0 +1,163 @@
+.hero {
+  max-width: 720px;
+  margin: 2.5rem auto 2.25rem;
+  text-align: center;
+}
+
+.eyebrow {
+  display: inline-block;
+  padding: 0.2rem 0.65rem;
+  border: 1px solid var(--border-strong);
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--text-muted);
+}
+
+.hero h1 {
+  margin: 1rem 0 0.75rem;
+  font-size: 2.6rem;
+  font-weight: 700;
+  line-height: 1.12;
+  letter-spacing: -0.03em;
+}
+
+.lead {
+  max-width: 520px;
+  margin: 0 auto;
+  font-size: 1rem;
+  color: var(--text-muted);
+}
+
+.cta {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  margin-top: 1.5rem;
+}
+
+.btn-large {
+  padding: 0.6rem 1.1rem;
+  font-size: 0.9rem;
+}
+
+/* App screenshot, with a soft indigo glow behind it */
+.preview {
+  position: relative;
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 6px;
+  box-shadow: 0 30px 80px -20px rgba(99, 102, 241, 0.35);
+}
+
+.preview img {
+  display: block;
+  width: 100%;
+  border-radius: 4px;
+}
+
+.features {
+  margin-top: 4rem;
+}
+
+.features h2,
+.tech h2 {
+  margin-bottom: 1.25rem;
+  text-align: center;
+  font-size: 1.25rem;
+  letter-spacing: -0.01em;
+}
+
+.feature-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.75rem;
+}
+
+.feature {
+  padding: 1.1rem 1.15rem;
+}
+
+.feature-icon {
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 7px;
+  background: var(--primary-soft);
+  color: var(--primary-hover);
+}
+
+.feature-icon svg {
+  width: 16px;
+  height: 16px;
+}
+
+.feature h3 {
+  margin: 0.8rem 0 0.3rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.feature p {
+  margin: 0;
+  color: var(--text-muted);
+}
+
+.tech {
+  margin-top: 3.5rem;
+}
+
+.tech ul {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.tech li {
+  padding: 0.3rem 0.75rem;
+  border: 1px solid var(--border-strong);
+  border-radius: 999px;
+  color: var(--text-muted);
+}
+
+.footer {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 4rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--border);
+  font-size: 0.8rem;
+  color: var(--text-faint);
+}
+
+.footer a {
+  color: var(--text-muted);
+}
+
+@media (max-width: 800px) {
+  .feature-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 560px) {
+  .hero h1 {
+    font-size: 1.85rem;
+  }
+
+  .hero h1 br {
+    display: none;
+  }
+
+  .feature-grid {
+    grid-template-columns: 1fr;
+  }
+}

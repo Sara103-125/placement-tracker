@@ -10,6 +10,13 @@ public class JobApplication
 {
     public int Id { get; set; }
 
+    /// <summary>
+    /// The account that owns this application. Nullable only because applications created
+    /// before accounts existed have no owner yet; the first account to register adopts them.
+    /// </summary>
+    [JsonIgnore]
+    public int? UserId { get; set; }
+
     public string Company { get; set; } = string.Empty;
     public string Role { get; set; } = string.Empty;
     public string? Location { get; set; }
@@ -31,4 +38,8 @@ public class JobApplication
     /// </summary>
     [JsonIgnore]
     public List<StatusChange> StatusHistory { get; set; } = new();
+
+    /// <summary>Interviews, tests and calls for this application. Endpoint: /api/applications/{id}/events.</summary>
+    [JsonIgnore]
+    public List<ApplicationEvent> Events { get; set; } = new();
 }

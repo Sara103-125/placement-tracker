@@ -4,6 +4,7 @@ import { RouterLink } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { JobApplication, STATUS_LABELS, STATUSES } from '../../models/job-application';
 import { ApplicationService } from '../../services/application.service';
+import { downloadApplicationsCsv } from '../../utils/csv';
 import { deadlineAlert } from '../../utils/deadline';
 
 type SortColumn = 'company' | 'role' | 'location' | 'status' | 'dateApplied' | 'deadline';
@@ -89,6 +90,11 @@ export class ApplicationList implements OnInit {
   protected ariaSort(column: SortColumn): 'ascending' | 'descending' | 'none' {
     if (this.sortColumn() !== column) return 'none';
     return this.sortDirection() === 'asc' ? 'ascending' : 'descending';
+  }
+
+  /** Downloads exactly what is shown: current search, filter and sort order. */
+  protected exportCsv(): void {
+    downloadApplicationsCsv(this.sortedApplications());
   }
 
   protected deleteApplication(app: JobApplication): void {

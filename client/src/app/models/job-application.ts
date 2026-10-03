@@ -45,10 +45,46 @@ export interface FunnelStep {
   count: number;
 }
 
+// These must match the EventType enum names in the .NET API.
+export type EventType = 'OnlineTest' | 'Interview' | 'AssessmentCentre' | 'Call' | 'Other';
+
+export const EVENT_TYPE_LABELS: Record<EventType, string> = {
+  OnlineTest: 'Online test',
+  Interview: 'Interview',
+  AssessmentCentre: 'Assessment centre',
+  Call: 'Call',
+  Other: 'Other',
+};
+
+export const EVENT_TYPES = Object.keys(EVENT_TYPE_LABELS) as EventType[];
+
+// An interview, test or call for one application (GET /api/applications/{id}/events).
+export interface ApplicationEvent {
+  id: number;
+  title: string;
+  type: EventType;
+  startsAt: string; // UTC, e.g. "2026-10-10T13:00:00Z"
+  notes: string | null;
+}
+
+export type ApplicationEventRequest = Omit<ApplicationEvent, 'id'>;
+
+// An event plus its company and role, for the dashboard.
+export interface UpcomingEvent {
+  id: number;
+  applicationId: number;
+  company: string;
+  role: string;
+  title: string;
+  type: EventType;
+  startsAt: string;
+}
+
 // Shape of GET /api/dashboard/summary.
 export interface DashboardSummary {
   total: number;
   statusCounts: Record<ApplicationStatus, number>;
   funnel: FunnelStep[];
   upcomingDeadlines: JobApplication[];
+  upcomingEvents: UpcomingEvent[];
 }

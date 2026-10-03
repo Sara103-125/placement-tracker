@@ -87,6 +87,10 @@
       </div>
     </form>
 
+    @if (editingId !== null) {
+      <app-application-events [applicationId]="editingId" />
+    }
+
     @if (history().length > 0) {
       <div class="history card">
         <h2>Status history</h2>

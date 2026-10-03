@@ -4,7 +4,21 @@
       <h1>Applications</h1>
       <p class="subtitle">{{ applications().length }} shown · click a column heading to sort</p>
     </div>
-    <a routerLink="/applications/new" class="btn btn-primary">+ Add application</a>
+    <div class="header-actions">
+      <button
+        type="button"
+        class="btn btn-secondary"
+        (click)="exportCsv()"
+        [disabled]="applications().length === 0"
+        title="Download the applications shown below as a spreadsheet"
+      >
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true">
+          <path d="M8 2v8M5 7l3 3 3-3M3 13h10" />
+        </svg>
+        Export CSV
+      </button>
+      <a routerLink="/applications/new" class="btn btn-primary">+ Add application</a>
+    </div>
   </div>
 
   <div class="filters">

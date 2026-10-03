@@ -1,0 +1,46 @@
+<section class="hero">
+  <span class="eyebrow">Placement Tracker</span>
+  <h1>Every placement application,<br />one clear pipeline.</h1>
+  <p class="lead">
+    Track applications, deadlines and interviews in one place, from the first wishlist entry to the offer.
+  </p>
+  <div class="cta">
+    <a routerLink="/register" class="btn btn-primary btn-large">Get started for free</a>
+    <a routerLink="/login" class="btn btn-secondary btn-large">Log in</a>
+  </div>
+</section>
+
+<div class="preview card">
+  <img src="images/dashboard-preview.png" alt="The Placement Tracker dashboard, with status counts, charts and upcoming deadlines" />
+</div>
+
+<section class="features">
+  <h2>Everything you need during placement season</h2>
+  <div class="feature-grid">
+    @for (feature of features; track feature.title) {
+      <div class="feature card">
+        <span class="feature-icon" aria-hidden="true">
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <path [attr.d]="feature.icon" />
+          </svg>
+        </span>
+        <h3>{{ feature.title }}</h3>
+        <p>{{ feature.text }}</p>
+      </div>
+    }
+  </div>
+</section>
+
+<section class="tech">
+  <h2>Built with</h2>
+  <ul>
+    @for (tech of techStack; track tech) {
+      <li>{{ tech }}</li>
+    }
+  </ul>
+</section>
+
+<footer class="footer">
+  <span>Placement Tracker · a full-stack portfolio project</span>
+  <a href="https://github.com/zaighamsara762-cmyk/placement-tracker" target="_blank" rel="noopener">Source code on GitHub</a>
+</footer>

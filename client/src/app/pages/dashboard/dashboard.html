@@ -97,28 +97,55 @@
       </div>
     </div>
 
-    <!-- Upcoming deadlines -->
-    <div class="card deadlines-card">
-      <h2>Deadlines in the next 7 days</h2>
-      @if (summary.upcomingDeadlines.length === 0) {
-        <p class="chart-empty">No deadlines in the next 7 days.</p>
-      } @else {
-        <ul class="deadlines">
-          @for (app of summary.upcomingDeadlines; track app.id) {
-            <li [class.urgent]="deadlineAlert(app.deadline, app.status) === 'soon'">
-              <div class="deadline-main">
-                <a [routerLink]="['/applications', app.id, 'edit']" class="company">{{ app.company }}</a>
-                <span class="muted">{{ app.role }}</span>
-              </div>
-              <span class="status status-{{ app.status.toLowerCase() }}">{{ statusLabels[app.status] }}</span>
-              <div class="deadline-date">
-                <strong>{{ relativeDays(app.deadline!) }}</strong>
-                <span class="muted">{{ app.deadline | date: 'EEE d MMM' }}</span>
-              </div>
-            </li>
-          }
-        </ul>
-      }
+    <div class="chart-grid">
+      <!-- Interviews, tests and calls this week -->
+      <div class="card deadlines-card">
+        <h2>Coming up this week</h2>
+        @if (summary.upcomingEvents.length === 0) {
+          <p class="chart-empty">No interviews or tests in the next 7 days.</p>
+        } @else {
+          <ul class="deadlines">
+            @for (event of summary.upcomingEvents; track event.id) {
+              <li>
+                <div class="deadline-main">
+                  <a [routerLink]="['/applications', event.applicationId, 'edit']" class="company">
+                    {{ event.title }}
+                  </a>
+                  <span class="muted">{{ event.company }} · {{ eventTypeLabels[event.type] }}</span>
+                </div>
+                <div class="deadline-date">
+                  <strong>{{ event.startsAt | date: 'EEE d MMM' }}</strong>
+                  <span class="muted">{{ event.startsAt | date: 'HH:mm' }}</span>
+                </div>
+              </li>
+            }
+          </ul>
+        }
+      </div>
+
+      <!-- Upcoming deadlines -->
+      <div class="card deadlines-card">
+        <h2>Deadlines in the next 7 days</h2>
+        @if (summary.upcomingDeadlines.length === 0) {
+          <p class="chart-empty">No deadlines in the next 7 days.</p>
+        } @else {
+          <ul class="deadlines">
+            @for (app of summary.upcomingDeadlines; track app.id) {
+              <li [class.urgent]="deadlineAlert(app.deadline, app.status) === 'soon'">
+                <div class="deadline-main">
+                  <a [routerLink]="['/applications', app.id, 'edit']" class="company">{{ app.company }}</a>
+                  <span class="muted">{{ app.role }}</span>
+                </div>
+                <span class="status status-{{ app.status.toLowerCase() }}">{{ statusLabels[app.status] }}</span>
+                <div class="deadline-date">
+                  <strong>{{ relativeDays(app.deadline!) }}</strong>
+                  <span class="muted">{{ app.deadline | date: 'EEE d MMM' }}</span>
+                </div>
+              </li>
+            }
+          </ul>
+        }
+      </div>
     </div>
   } @else {
     <p class="message">Loading…</p>

@@ -1,12 +1,19 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using PlacementTracker.Api.Auth;
 using PlacementTracker.Api.Data;
 using PlacementTracker.Api.Dtos;
 using PlacementTracker.Api.Entities;
 
 namespace PlacementTracker.Api.Controllers;
 
+/// <summary>
+/// Every endpoint needs a logged-in user ([Authorize]) and only ever touches that user's applications.
+/// Someone else's application id gives 404, exactly as if it didn't exist.
+/// </summary>
 [ApiController]
+[Authorize]
 [Route("api/applications")]
 public class ApplicationsController : ControllerBase
 {
@@ -17,11 +24,18 @@ public class ApplicationsController : ControllerBase
         _db = db;
     }
 
+    /// <summary>Only the current user's applications. Every query starts from here.</summary>
+    private IQueryable<JobApplication> MyApplications()
+    {
+        var userId = User.GetUserId();
+        return _db.JobApplications.Where(a => a.UserId == userId);
+    }
+
     // GET api/applications?search=google&status=Interview
     [HttpGet]
     public async Task<ActionResult<List<JobApplication>>> GetAll(string? search, ApplicationStatus? status)
     {
-        var query = _db.JobApplications.AsQueryable();
+        var query = MyApplications();
 
         if (!string.IsNullOrWhiteSpace(search))
         {
@@ -40,7 +54,7 @@ public class ApplicationsController : ControllerBase
     [HttpGet("{id}")]
     public async Task<ActionResult<JobApplication>> GetById(int id)
     {
-        var application = await _db.JobApplications.FindAsync(id);
+        var application = await MyApplications().FirstOrDefaultAsync(a => a.Id == id);
         if (application == null)
         {
             return NotFound();
@@ -54,7 +68,7 @@ public class ApplicationsController : ControllerBase
     public async Task<ActionResult<JobApplication>> Create(JobApplicationRequest request)
     {
         var now = DateTime.UtcNow;
-        var application = new JobApplication();
+        var application = new JobApplication { UserId = User.GetUserId() };
         CopyRequestToEntity(request, application);
         application.CreatedAt = now;
         application.UpdatedAt = now;
@@ -73,7 +87,7 @@ public class ApplicationsController : ControllerBase
     [HttpPut("{id}")]
     public async Task<ActionResult<JobApplication>> Update(int id, JobApplicationRequest request)
     {
-        var application = await _db.JobApplications.FindAsync(id);
+        var application = await MyApplications().FirstOrDefaultAsync(a => a.Id == id);
         if (application == null)
         {
             return NotFound();
@@ -93,7 +107,7 @@ public class ApplicationsController : ControllerBase
     [HttpPatch("{id}/status")]
     public async Task<ActionResult<JobApplication>> UpdateStatus(int id, UpdateStatusRequest request)
     {
-        var application = await _db.JobApplications.FindAsync(id);
+        var application = await MyApplications().FirstOrDefaultAsync(a => a.Id == id);
         if (application == null)
         {
             return NotFound();
@@ -112,7 +126,7 @@ public class ApplicationsController : ControllerBase
     [HttpGet("{id}/history")]
     public async Task<ActionResult<List<StatusChange>>> GetHistory(int id)
     {
-        if (!await _db.JobApplications.AnyAsync(a => a.Id == id))
+        if (!await MyApplications().AnyAsync(a => a.Id == id))
         {
             return NotFound();
         }
@@ -127,7 +141,7 @@ public class ApplicationsController : ControllerBase
     [HttpDelete("{id}")]
     public async Task<IActionResult> Delete(int id)
     {
-        var application = await _db.JobApplications.FindAsync(id);
+        var application = await MyApplications().FirstOrDefaultAsync(a => a.Id == id);
         if (application == null)
         {
             return NotFound();

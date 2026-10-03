@@ -1,7 +1,7 @@
 import { DatePipe } from '@angular/common';
 import { Component, OnInit, computed, inject, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { DashboardSummary, STATUS_LABELS, STATUSES } from '../../models/job-application';
+import { DashboardSummary, EVENT_TYPE_LABELS, STATUS_LABELS, STATUSES } from '../../models/job-application';
 import { ApplicationService } from '../../services/application.service';
 import { deadlineAlert, relativeDays } from '../../utils/deadline';
 
@@ -15,6 +15,7 @@ export class Dashboard implements OnInit {
   private readonly applicationService = inject(ApplicationService);
 
   protected readonly statusLabels = STATUS_LABELS;
+  protected readonly eventTypeLabels = EVENT_TYPE_LABELS;
   protected readonly deadlineAlert = deadlineAlert;
   protected readonly relativeDays = relativeDays;
 

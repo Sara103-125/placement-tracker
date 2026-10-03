@@ -22,6 +22,41 @@ namespace PlacementTracker.Api.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("PlacementTracker.Api.Entities.ApplicationEvent", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("JobApplicationId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Notes")
+                        .HasMaxLength(2000)
+                        .HasColumnType("nvarchar(2000)");
+
+                    b.Property<DateTime>("StartsAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .HasMaxLength(32)
+                        .HasColumnType("nvarchar(32)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("JobApplicationId");
+
+                    b.ToTable("ApplicationEvents");
+                });
+
             modelBuilder.Entity("PlacementTracker.Api.Entities.JobApplication", b =>
                 {
                     b.Property<int>("Id")
@@ -69,7 +104,12 @@ namespace PlacementTracker.Api.Migrations
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("datetime2");
 
+                    b.Property<int?>("UserId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("JobApplications");
                 });
@@ -100,6 +140,51 @@ namespace PlacementTracker.Api.Migrations
                     b.ToTable("StatusChanges");
                 });
 
+            modelBuilder.Entity("PlacementTracker.Api.Entities.User", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<string>("PasswordHash")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Email")
+                        .IsUnique();
+
+                    b.ToTable("Users");
+                });
+
+            modelBuilder.Entity("PlacementTracker.Api.Entities.ApplicationEvent", b =>
+                {
+                    b.HasOne("PlacementTracker.Api.Entities.JobApplication", null)
+                        .WithMany("Events")
+                        .HasForeignKey("JobApplicationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("PlacementTracker.Api.Entities.JobApplication", b =>
+                {
+                    b.HasOne("PlacementTracker.Api.Entities.User", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
             modelBuilder.Entity("PlacementTracker.Api.Entities.StatusChange", b =>
                 {
                     b.HasOne("PlacementTracker.Api.Entities.JobApplication", null)
@@ -111,6 +196,8 @@ namespace PlacementTracker.Api.Migrations
 
             modelBuilder.Entity("PlacementTracker.Api.Entities.JobApplication", b =>
                 {
+                    b.Navigation("Events");
+
                     b.Navigation("StatusHistory");
                 });
 #pragma warning restore 612, 618
