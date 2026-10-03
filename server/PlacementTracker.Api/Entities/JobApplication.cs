@@ -1,3 +1,5 @@
+using System.Text.Json.Serialization;
+
 namespace PlacementTracker.Api.Entities;
 
 /// <summary>
@@ -22,4 +24,11 @@ public class JobApplication
 
     public DateTime CreatedAt { get; set; }
     public DateTime UpdatedAt { get; set; }
+
+    /// <summary>
+    /// Every status this application has had. Not sent in normal JSON responses;
+    /// it has its own endpoint: GET /api/applications/{id}/history.
+    /// </summary>
+    [JsonIgnore]
+    public List<StatusChange> StatusHistory { get; set; } = new();
 }

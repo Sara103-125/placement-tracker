@@ -1,7 +1,13 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
-import { DashboardSummary, JobApplication, JobApplicationRequest } from '../models/job-application';
+import {
+  ApplicationStatus,
+  DashboardSummary,
+  JobApplication,
+  JobApplicationRequest,
+  StatusChange,
+} from '../models/job-application';
 
 /**
  * Talks to the .NET API. Components call these methods instead of using HttpClient directly,
@@ -35,6 +41,15 @@ export class ApplicationService {
 
   update(id: number, request: JobApplicationRequest): Observable<JobApplication> {
     return this.http.put<JobApplication>(`${this.baseUrl}/${id}`, request);
+  }
+
+  /** Changes only the status (used by the Kanban board). */
+  updateStatus(id: number, status: ApplicationStatus): Observable<JobApplication> {
+    return this.http.patch<JobApplication>(`${this.baseUrl}/${id}/status`, { status });
+  }
+
+  getHistory(id: number): Observable<StatusChange[]> {
+    return this.http.get<StatusChange[]>(`${this.baseUrl}/${id}/history`);
   }
 
   delete(id: number): Observable<void> {

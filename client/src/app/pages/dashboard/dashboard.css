@@ -1,78 +1,184 @@
-.page-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+h2 {
+  margin: 0;
+  font-size: 1.05rem;
+}
+
+/* ---------- Headline numbers ---------- */
+.kpi-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
   gap: 1rem;
   margin-bottom: 1.25rem;
 }
 
-h2 {
-  margin: 2rem 0 0.75rem;
-  font-size: 1.05rem;
-}
-
-.card {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 8px;
-}
-
-.label {
+.kpi {
   display: flex;
-  align-items: center;
-  gap: 0.45rem;
+  flex-direction: column;
+  gap: 0.3rem;
+  padding: 1.15rem 1.25rem;
+}
+
+/* The main number gets the gradient so the eye lands there first. */
+.kpi-hero {
+  border-radius: 14px;
+  background: var(--gradient);
+  color: #fff;
+  box-shadow: 0 8px 24px rgba(124, 58, 237, 0.3);
+}
+
+.kpi-hero .kpi-label {
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.kpi-hero .kpi-value {
+  font-size: 3rem;
+}
+
+.kpi-label {
   font-size: 0.9rem;
+  font-weight: 500;
   color: var(--text-muted);
 }
 
-/* The one big number the page leads with. */
-.total {
+.kpi-value {
+  font-size: 2.1rem;
+  font-weight: 800;
+  line-height: 1.05;
+}
+
+.kpi-icon {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  margin-bottom: 0.2rem;
+  border-radius: 10px;
+  font-size: 1.05rem;
+}
+
+.icon-blue  { background: #dceafb; }
+.icon-amber { background: #fdf0cf; }
+.icon-green { background: #d6f3e8; }
+
+/* ---------- Charts ---------- */
+.chart-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+}
+
+.chart-card {
+  padding: 1.25rem 1.5rem 1.4rem;
+}
+
+.chart-note {
+  margin: 0.2rem 0 1.1rem;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+.chart-empty {
+  margin: 0;
+  padding: 1.5rem 0;
+  text-align: center;
+  color: var(--text-muted);
+}
+
+.bars {
+  list-style: none;
+  margin: 0;
+  padding: 0;
   display: flex;
   flex-direction: column;
-  gap: 0.25rem;
+  gap: 0.15rem;
+}
+
+/* Each row is: label | bar | value. The row (not just the thin bar) is the hover target. */
+.bar-row {
+  position: relative;
+  display: grid;
+  grid-template-columns: 96px 1fr 52px;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.4rem 0.5rem;
+  border-radius: 8px;
+  outline: none;
+}
+
+.bar-row:hover,
+.bar-row:focus-visible {
+  background: var(--surface-alt);
+}
+
+.bar-label {
+  font-size: 0.88rem;
+  color: var(--text);
+}
+
+.bar-track {
+  height: 14px;
+}
+
+/* Thin bars, rounded only at the data end (the end that shows the value). */
+.bar {
+  display: block;
+  height: 100%;
+  min-width: 3px;
+  border-radius: 0 4px 4px 0;
+  transition: width 0.5s ease;
+}
+
+.fill-wishlist   { background: var(--status-wishlist); }
+.fill-applied    { background: var(--status-applied); }
+.fill-onlinetest { background: var(--status-onlinetest); }
+.fill-interview  { background: var(--status-interview); }
+.fill-offer      { background: var(--status-offer); }
+.fill-rejected   { background: var(--status-rejected); }
+
+.bar-value {
+  font-weight: 700;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.bar-value small {
+  display: block;
+  font-size: 0.72rem;
+  font-weight: 500;
+  color: var(--text-muted);
+}
+
+/* Hover / keyboard-focus tooltip */
+.tooltip {
+  display: none;
+  position: absolute;
+  z-index: 2;
+  left: 104px;
+  bottom: calc(100% - 4px);
+  padding: 0.4rem 0.65rem;
+  border-radius: 8px;
+  background: var(--text);
+  color: #fff;
+  font-size: 0.8rem;
+  white-space: nowrap;
+  box-shadow: 0 6px 16px rgba(30, 27, 75, 0.25);
+  pointer-events: none;
+}
+
+.bar-row:hover .tooltip,
+.bar-row:focus-visible .tooltip {
+  display: block;
+}
+
+/* ---------- Upcoming deadlines ---------- */
+.deadlines-card {
   padding: 1.25rem 1.5rem;
 }
 
-.total-value {
-  font-size: 3rem;
-  font-weight: 700;
-  line-height: 1;
+.deadlines-card h2 {
+  margin-bottom: 0.75rem;
 }
-
-/* Six tiles: 3 per row on desktop, 2 on phones. */
-.status-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 0.75rem;
-}
-
-.stat {
-  display: flex;
-  flex-direction: column;
-  gap: 0.35rem;
-  padding: 1rem 1.25rem;
-}
-
-.stat-value {
-  font-size: 1.75rem;
-  font-weight: 600;
-  line-height: 1.1;
-}
-
-/* Coloured dot next to each status name (same colours as the badges). */
-.dot {
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  flex-shrink: 0;
-}
-
-.dot-wishlist   { background: #64748b; }
-.dot-applied    { background: #2563eb; }
-.dot-onlinetest { background: #7c3aed; }
-.dot-interview  { background: #d97706; }
-.dot-offer      { background: #16a34a; }
-.dot-rejected   { background: #dc2626; }
 
 .deadlines {
   list-style: none;
@@ -84,12 +190,20 @@ h2 {
   display: flex;
   align-items: center;
   gap: 1rem;
-  padding: 0.85rem 1.25rem;
+  padding: 0.8rem 0.9rem;
+  margin: 0 -0.9rem;
   border-bottom: 1px solid var(--border);
+  border-left: 3px solid transparent;
 }
 
 .deadlines li:last-child {
   border-bottom: none;
+}
+
+/* Due within 3 days: amber edge */
+.deadlines li.urgent {
+  border-left-color: var(--status-interview);
+  background: #fffbeb;
 }
 
 .deadline-main {
@@ -100,7 +214,7 @@ h2 {
 }
 
 .company {
-  font-weight: 600;
+  font-weight: 700;
 }
 
 .deadline-date {
@@ -111,25 +225,24 @@ h2 {
   font-size: 0.9rem;
 }
 
-.message {
-  padding: 2rem;
-  text-align: center;
-  color: var(--text-muted);
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 8px;
-}
-
-.message.error {
-  color: var(--danger);
-}
-
-@media (max-width: 600px) {
-  .status-grid {
+/* ---------- Phones ---------- */
+@media (max-width: 800px) {
+  .kpi-row {
     grid-template-columns: repeat(2, 1fr);
   }
 
+  .chart-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 600px) {
   .deadlines li {
     flex-wrap: wrap;
+  }
+
+  .tooltip {
+    left: 0;
+    white-space: normal;
   }
 }

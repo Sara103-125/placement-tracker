@@ -6,15 +6,19 @@ Built with an **ASP.NET Core 8 Web API**, **Entity Framework Core** and **SQL Se
 
 ## Screenshots
 
-**Dashboard**: total applications, a count for each status, and deadlines in the next 7 days.
+**Dashboard**: headline numbers, a bar chart of applications by status, a progress funnel, and deadlines in the next 7 days.
 
 ![Dashboard](docs/screenshots/dashboard.png)
 
-**Applications list**: search by company or role and filter by status.
+**Kanban board**: drag a card to another column to change its status.
+
+![Kanban board](docs/screenshots/board.png)
+
+**Applications list**: search, filter by status, sort by any column, with overdue and due-soon deadline alerts.
 
 ![Applications list](docs/screenshots/applications.png)
 
-**Add / Edit form**, with validation.
+**Add / Edit form** with validation, plus a timeline of every status change.
 
 ![Edit form](docs/screenshots/edit-form.png)
 
@@ -22,16 +26,20 @@ Built with an **ASP.NET Core 8 Web API**, **Entity Framework Core** and **SQL Se
 
 - **Add, edit and delete** applications with company, role, location, job link, date applied, deadline, status and notes
 - **Six statuses**: Wishlist, Applied, Online Test, Interview, Offer, Rejected
-- **List page** with a search box (company or role) and a status filter
+- **List page** with a search box (company or role), a status filter, and **sorting** by clicking any column heading
+- **Deadline alerts**: deadlines that have passed are marked *Overdue*, and ones due within 3 days are marked *Due soon*
+- **Kanban board**: drag-and-drop cards between status columns, saved straight to the API
+- **Status history**: every status change is recorded with a date and shown as a timeline on the edit page
+- **Dashboard** with headline numbers, an *Applications by status* bar chart, a *Progress funnel* (how many applications reached each stage, using the status history), and deadlines in the next 7 days
 - **Form validation** in the browser and on the API (required fields, max lengths, valid links)
 - **Delete confirmation** so nothing is removed by accident
-- **Dashboard** showing how many applications are at each status and which deadlines are in the next 7 days
+- **Responsive** layout that works on phones
 
 ## Tech stack
 
 | Part | Technology |
 |---|---|
-| Front end | Angular 22 (standalone components, signals, Reactive Forms), plain CSS |
+| Front end | Angular 22 (standalone components, signals, Reactive Forms), Angular CDK drag-and-drop, plain CSS (charts built with HTML/CSS, no chart library) |
 | Back end | ASP.NET Core 8 Web API (controllers) |
 | Database | SQL Server LocalDB with Entity Framework Core 8 (code-first migrations) |
 | API docs | Swagger / OpenAPI |
@@ -45,16 +53,18 @@ placement-tracker/
 │   └── src/app/
 │       ├── models/                 TypeScript types matching the API
 │       ├── services/               ApplicationService: every HTTP call to the API
+│       ├── utils/                  Deadline helpers (overdue / due soon)
 │       └── pages/
-│           ├── dashboard/          Dashboard page
-│           ├── application-list/   Table with search and filter
-│           └── application-form/   Add / Edit form
+│           ├── dashboard/          Headline numbers, charts, upcoming deadlines
+│           ├── application-list/   Table with search, filter and sorting
+│           ├── application-form/   Add / Edit form + status history timeline
+│           └── board/              Kanban board with drag and drop
 ├── server/
 │   ├── PlacementTracker.Api/       ASP.NET Core Web API
 │   │   ├── Controllers/            ApplicationsController, DashboardController, HealthController
 │   │   ├── Data/                   AppDbContext (EF Core)
 │   │   ├── Dtos/                   Request and response shapes
-│   │   ├── Entities/               JobApplication, ApplicationStatus
+│   │   ├── Entities/               JobApplication, StatusChange, ApplicationStatus
 │   │   └── Migrations/             Database schema history
 │   └── PlacementTracker.Api.Tests/ xUnit tests
 └── docs/screenshots/
@@ -108,13 +118,15 @@ dotnet test
 | GET | `/api/applications/{id}` | Get one application |
 | POST | `/api/applications` | Create an application |
 | PUT | `/api/applications/{id}` | Update an application |
-| DELETE | `/api/applications/{id}` | Delete an application |
-| GET | `/api/dashboard/summary` | Counts per status and deadlines in the next 7 days |
+| PATCH | `/api/applications/{id}/status` | Change only the status (used by the Kanban board) |
+| GET | `/api/applications/{id}/history` | Status history of one application |
+| DELETE | `/api/applications/{id}` | Delete an application (and its history) |
+| GET | `/api/dashboard/summary` | Counts per status, progress funnel and deadlines in the next 7 days |
 | GET | `/api/health` | Checks the API can reach the database |
 
 ## Possible improvements
 
 - User accounts with login, so several people can use it
-- Sorting the table by any column
+- Drag to reorder cards within a board column
 - Reminders before a deadline
 - Deploying to the cloud (for example Azure App Service and Azure SQL)

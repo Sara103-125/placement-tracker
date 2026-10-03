@@ -99,6 +99,61 @@ public class ApplicationsControllerTests
     }
 
     [Fact]
+    public async Task Create_RecordsStartingStatusInHistory()
+    {
+        using var db = TestDb.Create();
+        var controller = new ApplicationsController(db);
+
+        await controller.Create(NewRequest());
+
+        var entry = Assert.Single(db.StatusChanges);
+        Assert.Equal(ApplicationStatus.Applied, entry.Status);
+    }
+
+    [Fact]
+    public async Task UpdateStatus_ChangesStatus_AndAddsHistoryEntry()
+    {
+        using var db = TestDb.Create();
+        var controller = new ApplicationsController(db);
+        await controller.Create(NewRequest());
+        var id = db.JobApplications.Single().Id;
+
+        var result = await controller.UpdateStatus(id, new UpdateStatusRequest { Status = ApplicationStatus.Interview });
+
+        Assert.Equal(ApplicationStatus.Interview, result.Value!.Status);
+        var history = (await controller.GetHistory(id)).Value!;
+        Assert.Equal(
+            new[] { ApplicationStatus.Applied, ApplicationStatus.Interview },
+            history.Select(h => h.Status));
+    }
+
+    [Fact]
+    public async Task Update_WithSameStatus_DoesNotAddHistoryEntry()
+    {
+        using var db = TestDb.Create();
+        var controller = new ApplicationsController(db);
+        await controller.Create(NewRequest());
+        var id = db.JobApplications.Single().Id;
+
+        var request = NewRequest();
+        request.Notes = "Only the notes changed";
+        await controller.Update(id, request);
+
+        Assert.Single(db.StatusChanges);
+    }
+
+    [Fact]
+    public async Task UpdateStatus_ReturnsNotFound_WhenApplicationDoesNotExist()
+    {
+        using var db = TestDb.Create();
+        var controller = new ApplicationsController(db);
+
+        var result = await controller.UpdateStatus(999, new UpdateStatusRequest { Status = ApplicationStatus.Offer });
+
+        Assert.IsType<NotFoundResult>(result.Result);
+    }
+
+    [Fact]
     public async Task GetAll_FiltersByStatus()
     {
         using var db = TestDb.Create();

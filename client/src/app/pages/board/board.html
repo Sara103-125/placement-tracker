@@ -1,0 +1,65 @@
+<section>
+  <div class="page-header">
+    <div>
+      <h1>Board</h1>
+      <p class="subtitle">Drag a card to another column to change its status.</p>
+    </div>
+    <a routerLink="/applications/new" class="btn btn-primary">+ Add application</a>
+  </div>
+
+  @if (errorMessage()) {
+    <p class="message error">{{ errorMessage() }}</p>
+  }
+
+  @if (loading()) {
+    <p class="message">Loading…</p>
+  } @else {
+    <!-- cdkDropListGroup lets cards be dragged between any of the columns inside it. -->
+    <div class="board" cdkDropListGroup>
+      @for (column of columns(); track column.status) {
+        <div class="column column-{{ column.status.toLowerCase() }}">
+          <div class="column-header">
+            <span class="dot dot-{{ column.status.toLowerCase() }}" aria-hidden="true"></span>
+            <span class="column-title">{{ statusLabels[column.status] }}</span>
+            <span class="count">{{ column.cards.length }}</span>
+          </div>
+
+          <div
+            class="card-list"
+            cdkDropList
+            [cdkDropListData]="column.status"
+            (cdkDropListDropped)="onDrop($event)"
+          >
+            @for (app of column.cards; track app.id) {
+              <!-- On touch screens, press and hold briefly to drag, so swiping still scrolls the board. -->
+              <article class="board-card" cdkDrag [cdkDragData]="app" [cdkDragStartDelay]="{ touch: 250, mouse: 0 }">
+                <a [routerLink]="['/applications', app.id, 'edit']" class="card-company">{{ app.company }}</a>
+                <div class="card-role">{{ app.role }}</div>
+
+                <div class="card-meta">
+                  @if (app.location) {
+                    <span>📍 {{ app.location }}</span>
+                  }
+                  @if (app.deadline) {
+                    <span>
+                      📅 {{ app.deadline | date: 'd MMM' }}
+                      @switch (deadlineAlert(app.deadline, app.status)) {
+                        @case ('overdue') { <span class="deadline-alert overdue">Overdue</span> }
+                        @case ('soon') { <span class="deadline-alert soon">Soon</span> }
+                      }
+                    </span>
+                  }
+                </div>
+
+                <!-- What is shown under the pointer while dragging -->
+                <div *cdkDragPlaceholder class="drop-placeholder"></div>
+              </article>
+            } @empty {
+              <p class="empty">Drop here</p>
+            }
+          </div>
+        </div>
+      }
+    </div>
+  }
+</section>

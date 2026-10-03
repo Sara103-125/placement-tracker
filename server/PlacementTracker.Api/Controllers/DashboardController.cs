@@ -34,6 +34,8 @@ public class DashboardController : ControllerBase
             statusCounts[status] = counts.GetValueOrDefault(status);
         }
 
+        var funnel = await BuildFunnel();
+
         var today = DateOnly.FromDateTime(DateTime.Today);
         var nextWeek = today.AddDays(7);
 
@@ -46,7 +48,45 @@ public class DashboardController : ControllerBase
         {
             Total = counts.Values.Sum(),
             StatusCounts = statusCounts,
+            Funnel = funnel,
             UpcomingDeadlines = upcoming
         };
+    }
+
+    /// <summary>
+    /// The funnel answers: "of everything I applied to, how far did each one get?"
+    /// It uses the status history, so an application that reached Interview and was later
+    /// Rejected still counts as having reached Applied, Online Test and Interview.
+    /// </summary>
+    private async Task<List<FunnelStep>> BuildFunnel()
+    {
+        // The stages in pipeline order. Wishlist (not applied yet) and Rejected (an outcome) are not stages.
+        var stages = new[]
+        {
+            ApplicationStatus.Applied,
+            ApplicationStatus.OnlineTest,
+            ApplicationStatus.Interview,
+            ApplicationStatus.Offer,
+        };
+
+        var history = await _db.StatusChanges
+            .Where(s => s.Status != ApplicationStatus.Wishlist && s.Status != ApplicationStatus.Rejected)
+            .Select(s => new { s.JobApplicationId, s.Status })
+            .ToListAsync();
+
+        // For each application, the furthest stage it ever reached (0 = Applied ... 3 = Offer).
+        var furthestStage = history
+            .GroupBy(s => s.JobApplicationId)
+            .Select(g => g.Max(s => Array.IndexOf(stages, s.Status)))
+            .ToList();
+
+        // Reaching a later stage means it also passed the earlier ones, even if it skipped them.
+        return stages
+            .Select((stage, index) => new FunnelStep
+            {
+                Status = stage,
+                Count = furthestStage.Count(furthest => furthest >= index),
+            })
+            .ToList();
     }
 }

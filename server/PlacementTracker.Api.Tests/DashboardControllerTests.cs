@@ -1,4 +1,5 @@
 using PlacementTracker.Api.Controllers;
+using PlacementTracker.Api.Dtos;
 using PlacementTracker.Api.Entities;
 
 namespace PlacementTracker.Api.Tests;
@@ -30,6 +31,33 @@ public class DashboardControllerTests
         Assert.Equal(1, summary.StatusCounts[ApplicationStatus.Offer]);
         Assert.Equal(0, summary.StatusCounts[ApplicationStatus.Rejected]);
         Assert.Equal(6, summary.StatusCounts.Count); // every status is present
+    }
+
+    [Fact]
+    public async Task GetSummary_Funnel_CountsTheFurthestStageEachApplicationReached()
+    {
+        using var db = TestDb.Create();
+        var controller = new ApplicationsController(db);
+
+        // A: Applied only.  B: Applied -> Interview -> Rejected.  C: Applied -> Online Test -> Interview -> Offer.
+        await controller.Create(new JobApplicationRequest { Company = "A", Role = "Intern", Status = ApplicationStatus.Applied });
+        await controller.Create(new JobApplicationRequest { Company = "B", Role = "Intern", Status = ApplicationStatus.Applied });
+        await controller.Create(new JobApplicationRequest { Company = "C", Role = "Intern", Status = ApplicationStatus.Applied });
+        var b = db.JobApplications.Single(a => a.Company == "B").Id;
+        var c = db.JobApplications.Single(a => a.Company == "C").Id;
+        await controller.UpdateStatus(b, new UpdateStatusRequest { Status = ApplicationStatus.Interview });
+        await controller.UpdateStatus(b, new UpdateStatusRequest { Status = ApplicationStatus.Rejected });
+        await controller.UpdateStatus(c, new UpdateStatusRequest { Status = ApplicationStatus.OnlineTest });
+        await controller.UpdateStatus(c, new UpdateStatusRequest { Status = ApplicationStatus.Interview });
+        await controller.UpdateStatus(c, new UpdateStatusRequest { Status = ApplicationStatus.Offer });
+
+        var summary = (await new DashboardController(db).GetSummary()).Value!;
+        var funnel = summary.Funnel.ToDictionary(f => f.Status, f => f.Count);
+
+        Assert.Equal(3, funnel[ApplicationStatus.Applied]);
+        Assert.Equal(2, funnel[ApplicationStatus.OnlineTest]); // B skipped it, but reached a later stage
+        Assert.Equal(2, funnel[ApplicationStatus.Interview]);  // B still counts even though it was rejected
+        Assert.Equal(1, funnel[ApplicationStatus.Offer]);
     }
 
     [Fact]

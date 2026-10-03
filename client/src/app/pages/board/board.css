@@ -1,0 +1,128 @@
+/* Six columns side by side. On small screens the board scrolls sideways. */
+.board {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(170px, 1fr));
+  gap: 0.85rem;
+  overflow-x: auto;
+  padding-bottom: 0.5rem;
+}
+
+.column {
+  display: flex;
+  flex-direction: column;
+  min-height: 420px;
+  background: var(--surface-alt);
+  border: 1px solid var(--border);
+  border-top: 4px solid var(--column-colour);
+  border-radius: 14px;
+}
+
+.column-wishlist   { --column-colour: var(--status-wishlist); }
+.column-applied    { --column-colour: var(--status-applied); }
+.column-onlinetest { --column-colour: var(--status-onlinetest); }
+.column-interview  { --column-colour: var(--status-interview); }
+.column-offer      { --column-colour: var(--status-offer); }
+.column-rejected   { --column-colour: var(--status-rejected); }
+
+.column-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.85rem 0.9rem 0.6rem;
+  font-weight: 700;
+}
+
+.column-title {
+  flex: 1;
+}
+
+.count {
+  min-width: 1.6rem;
+  padding: 0.05rem 0.45rem;
+  border-radius: 999px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  font-size: 0.8rem;
+  text-align: center;
+  color: var(--text-muted);
+}
+
+.card-list {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  padding: 0.3rem 0.6rem 0.8rem;
+}
+
+.board-card {
+  padding: 0.75rem 0.85rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--column-colour, var(--primary));
+  border-radius: 10px;
+  box-shadow: var(--shadow);
+  cursor: grab;
+}
+
+.board-card:active {
+  cursor: grabbing;
+}
+
+.card-company {
+  font-weight: 700;
+  color: var(--text);
+}
+
+.card-role {
+  margin-top: 0.1rem;
+  font-size: 0.88rem;
+  color: var(--text-muted);
+}
+
+.card-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  margin-top: 0.5rem;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
+.empty {
+  margin: 0;
+  padding: 1.2rem 0;
+  text-align: center;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  border: 2px dashed var(--border);
+  border-radius: 10px;
+}
+
+/* --- Drag and drop states (classes added by the Angular CDK) --- */
+
+/* The card that follows the pointer while dragging */
+.cdk-drag-preview {
+  box-shadow: 0 12px 28px rgba(79, 70, 229, 0.3);
+  transform: rotate(2deg);
+}
+
+/* The gap where the card will land */
+.drop-placeholder {
+  min-height: 70px;
+  border: 2px dashed var(--primary);
+  border-radius: 10px;
+  background: #eef2ff;
+}
+
+/* A column lights up when a card is dragged over it */
+.card-list.cdk-drop-list-receiving,
+.card-list.cdk-drop-list-dragging {
+  background: rgba(124, 58, 237, 0.05);
+  border-radius: 10px;
+}
+
+.cdk-drag-animating,
+.card-list.cdk-drop-list-dragging .board-card:not(.cdk-drag-placeholder) {
+  transition: transform 200ms ease;
+}

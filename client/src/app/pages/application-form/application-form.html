@@ -86,5 +86,25 @@
         </button>
       </div>
     </form>
+
+    @if (history().length > 0) {
+      <div class="history card">
+        <h2>Status history</h2>
+        <ol class="timeline">
+          @for (entry of history(); track entry.id; let first = $first) {
+            <li>
+              <span class="dot dot-{{ entry.status.toLowerCase() }}" aria-hidden="true"></span>
+              <div>
+                <span class="status status-{{ entry.status.toLowerCase() }}">{{ statusLabels[entry.status] }}</span>
+                @if (first) {
+                  <span class="current">current</span>
+                }
+                <div class="muted when">{{ entry.changedAt | date: 'd MMM yyyy, HH:mm' }}</div>
+              </div>
+            </li>
+          }
+        </ol>
+      </div>
+    }
   }
 </section>

@@ -13,10 +13,84 @@ h1 {
 }
 
 form {
-  padding: 1.5rem;
+  position: relative;
+  overflow: hidden;
+  padding: 1.75rem 1.5rem 1.5rem;
   background: var(--surface);
   border: 1px solid var(--border);
-  border-radius: 8px;
+  border-radius: 14px;
+  box-shadow: var(--shadow);
+}
+
+/* Gradient stripe along the top of the form */
+form::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: var(--gradient);
+}
+
+/* Status history timeline */
+.history {
+  margin-top: 1.5rem;
+  padding: 1.25rem 1.5rem;
+}
+
+.history h2 {
+  margin: 0 0 1rem;
+  font-size: 1.05rem;
+}
+
+.timeline {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.timeline li {
+  position: relative;
+  display: flex;
+  gap: 0.9rem;
+  padding-bottom: 1.1rem;
+}
+
+.timeline li:last-child {
+  padding-bottom: 0;
+}
+
+/* The vertical line joining the dots */
+.timeline li:not(:last-child)::before {
+  content: '';
+  position: absolute;
+  left: 6px;
+  top: 16px;
+  bottom: 0;
+  width: 2px;
+  background: var(--border);
+}
+
+.timeline .dot {
+  width: 14px;
+  height: 14px;
+  margin-top: 4px;
+  border: 3px solid var(--surface);
+  box-shadow: 0 0 0 1px var(--border);
+}
+
+.current {
+  margin-left: 0.4rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--primary);
+}
+
+.when {
+  margin-top: 0.2rem;
+  font-size: 0.85rem;
 }
 
 /* Two columns on wide screens, one column on phones. */

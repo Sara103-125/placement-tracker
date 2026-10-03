@@ -1,7 +1,14 @@
+import { DatePipe } from '@angular/common';
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
-import { ApplicationStatus, JobApplicationRequest, STATUS_LABELS, STATUSES } from '../../models/job-application';
+import {
+  ApplicationStatus,
+  JobApplicationRequest,
+  STATUS_LABELS,
+  STATUSES,
+  StatusChange,
+} from '../../models/job-application';
 import { ApplicationService } from '../../services/application.service';
 
 /**
@@ -11,7 +18,7 @@ import { ApplicationService } from '../../services/application.service';
  */
 @Component({
   selector: 'app-application-form',
-  imports: [ReactiveFormsModule, RouterLink],
+  imports: [ReactiveFormsModule, RouterLink, DatePipe],
   templateUrl: './application-form.html',
   styleUrl: './application-form.css',
 })
@@ -29,6 +36,7 @@ export class ApplicationForm implements OnInit {
 
   protected readonly loading = signal(false);
   protected readonly notFound = signal(false);
+  protected readonly history = signal<StatusChange[]>([]);
   protected readonly saving = signal(false);
   protected readonly errorMessage = signal('');
 
@@ -50,6 +58,10 @@ export class ApplicationForm implements OnInit {
     if (id) {
       this.editingId = Number(id);
       this.loadApplication(this.editingId);
+      this.applicationService.getHistory(this.editingId).subscribe({
+        // Newest first, so the current status is at the top of the timeline.
+        next: (history) => this.history.set([...history].reverse()),
+      });
     }
   }
 

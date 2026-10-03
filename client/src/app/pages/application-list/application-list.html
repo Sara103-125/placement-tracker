@@ -2,7 +2,7 @@
   <div class="page-header">
     <div>
       <h1>Applications</h1>
-      <span class="muted">{{ applications().length }} shown</span>
+      <p class="subtitle">{{ applications().length }} shown · click a column heading to sort</p>
     </div>
     <a routerLink="/applications/new" class="btn btn-primary">+ Add application</a>
   </div>
@@ -30,28 +30,32 @@
     <p class="message">Loading…</p>
   } @else if (applications().length === 0) {
     <p class="message">
-      {{ hasFilters() ? 'No applications match your search.' : 'No applications yet.' }}
+      {{ hasFilters() ? 'No applications match your search.' : 'No applications yet. Add your first one!' }}
     </p>
   } @else {
-    <div class="table-wrapper">
+    <div class="table-wrapper card">
       <table>
         <thead>
           <tr>
-            <th>Company</th>
-            <th>Role</th>
-            <th>Location</th>
-            <th>Status</th>
-            <th>Date applied</th>
-            <th>Deadline</th>
+            @for (column of columns; track column.key) {
+              <th [attr.aria-sort]="ariaSort(column.key)">
+                <button type="button" class="sort-button" [class.sorted]="sortColumn() === column.key" (click)="sortBy(column.key)">
+                  {{ column.label }}
+                  <span class="sort-icon" aria-hidden="true">
+                    {{ sortColumn() === column.key ? (sortDirection() === 'asc' ? '▲' : '▼') : '↕' }}
+                  </span>
+                </button>
+              </th>
+            }
             <th class="actions-col"><span class="visually-hidden">Actions</span></th>
           </tr>
         </thead>
         <tbody>
-          @for (app of applications(); track app.id) {
+          @for (app of sortedApplications(); track app.id) {
             <tr>
               <td class="company">
                 @if (app.jobLink) {
-                  <a [href]="app.jobLink" target="_blank" rel="noopener">{{ app.company }}</a>
+                  <a [href]="app.jobLink" target="_blank" rel="noopener">{{ app.company }} ↗</a>
                 } @else {
                   {{ app.company }}
                 }
@@ -59,12 +63,16 @@
               <td>{{ app.role }}</td>
               <td>{{ app.location || '—' }}</td>
               <td>
-                <span class="status status-{{ app.status.toLowerCase() }}">
-                  {{ statusLabels[app.status] }}
-                </span>
+                <span class="status status-{{ app.status.toLowerCase() }}">{{ statusLabels[app.status] }}</span>
               </td>
               <td>{{ (app.dateApplied | date: 'd MMM yyyy') ?? '—' }}</td>
-              <td>{{ (app.deadline | date: 'd MMM yyyy') ?? '—' }}</td>
+              <td>
+                {{ (app.deadline | date: 'd MMM yyyy') ?? '—' }}
+                @switch (deadlineAlert(app.deadline, app.status)) {
+                  @case ('overdue') { <span class="deadline-alert overdue">Overdue</span> }
+                  @case ('soon') { <span class="deadline-alert soon">Due soon</span> }
+                }
+              </td>
               <td class="actions-col">
                 <a [routerLink]="['/applications', app.id, 'edit']" class="btn btn-small btn-secondary">Edit</a>
                 <button type="button" class="btn btn-small btn-danger" (click)="deleteApplication(app)">Delete</button>
