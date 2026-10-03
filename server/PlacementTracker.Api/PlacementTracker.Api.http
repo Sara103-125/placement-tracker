@@ -2,3 +2,34 @@
 
 GET {{PlacementTracker.Api_HostAddress}}/api/health
 Accept: application/json
+
+###
+
+GET {{PlacementTracker.Api_HostAddress}}/api/applications
+Accept: application/json
+
+###
+
+GET {{PlacementTracker.Api_HostAddress}}/api/applications?search=goo&status=Interview
+Accept: application/json
+
+###
+
+POST {{PlacementTracker.Api_HostAddress}}/api/applications
+Content-Type: application/json
+
+{
+  "company": "Google",
+  "role": "Software Engineering Intern",
+  "location": "London",
+  "jobLink": "https://careers.google.com",
+  "dateApplied": "2026-10-01",
+  "deadline": "2026-10-08",
+  "status": "Applied",
+  "notes": "Referred by a friend"
+}
+
+###
+
+GET {{PlacementTracker.Api_HostAddress}}/api/dashboard/summary
+Accept: application/json
