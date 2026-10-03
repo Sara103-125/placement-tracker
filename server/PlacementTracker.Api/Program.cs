@@ -68,22 +68,35 @@ builder.Services.AddAuthorization();
 
 var app = builder.Build();
 
+// Apply any pending migrations on startup, so the database (LocalDB here, Azure SQL when live)
+// always matches the code without running "dotnet ef database update" by hand.
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+    db.Database.Migrate();
+}
+
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
-
-    // Apply any pending migrations on startup so the database is always up to date locally.
-    using var scope = app.Services.CreateScope();
-    var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-    db.Database.Migrate();
 }
 else
 {
     app.UseHttpsRedirection();
 }
 
+// When live, the built Angular website is copied into wwwroot, so this one app serves both
+// the website and the API from a single address. (Locally, `ng serve` serves the website instead.)
+app.UseDefaultFiles();
+app.UseStaticFiles();
+
 app.UseAuthentication(); // who is this? (reads the token)
 app.UseAuthorization();  // are they allowed? (checks [Authorize])
 app.MapControllers();
+
+// Any other address that isn't an API route or a file (e.g. /dashboard) is an Angular page,
+// so send index.html and let Angular's router show the right page.
+app.MapFallbackToFile("index.html");
+
 app.Run();

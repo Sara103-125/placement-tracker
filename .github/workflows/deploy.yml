@@ -1,0 +1,61 @@
+# On every push to main: run the tests, build the Angular website and the .NET API into one package,
+# and (once Azure is set up) deploy it to Azure App Service.
+name: Test and deploy
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch: # also lets you run it by hand from the Actions tab
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: client/package-lock.json
+
+      - name: Run API tests
+        run: dotnet test server/PlacementTracker.Api.Tests/PlacementTracker.Api.Tests.csproj
+
+      - name: Build Angular website
+        working-directory: client
+        run: |
+          npm ci
+          npx ng build
+
+      - name: Publish API with the website inside wwwroot
+        run: |
+          dotnet publish server/PlacementTracker.Api/PlacementTracker.Api.csproj -c Release -o publish
+          mkdir -p publish/wwwroot
+          cp -r client/dist/placement-tracker-client/browser/. publish/wwwroot/
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: app
+          path: publish
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    # Skipped until the Azure app name has been added in GitHub (Settings > Secrets and variables > Actions).
+    if: vars.AZURE_WEBAPP_NAME != ''
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: app
+          path: publish
+
+      - uses: azure/webapps-deploy@v3
+        with:
+          app-name: ${{ vars.AZURE_WEBAPP_NAME }}
+          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
+          package: publish
