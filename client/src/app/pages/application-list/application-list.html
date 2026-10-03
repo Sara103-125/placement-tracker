@@ -1,0 +1,70 @@
+<section>
+  <div class="page-header">
+    <h1>Applications</h1>
+    <span class="muted">{{ applications().length }} shown</span>
+  </div>
+
+  <div class="filters">
+    <input
+      #searchBox
+      type="search"
+      placeholder="Search company or role…"
+      aria-label="Search by company or role"
+      (input)="onSearchChange(searchBox.value)"
+    />
+
+    <select #statusBox aria-label="Filter by status" (change)="onStatusChange(statusBox.value)">
+      <option value="">All statuses</option>
+      @for (status of statuses; track status) {
+        <option [value]="status">{{ statusLabels[status] }}</option>
+      }
+    </select>
+  </div>
+
+  @if (errorMessage()) {
+    <p class="message error">{{ errorMessage() }}</p>
+  } @else if (loading() && applications().length === 0) {
+    <p class="message">Loading…</p>
+  } @else if (applications().length === 0) {
+    <p class="message">
+      {{ hasFilters() ? 'No applications match your search.' : 'No applications yet.' }}
+    </p>
+  } @else {
+    <div class="table-wrapper">
+      <table>
+        <thead>
+          <tr>
+            <th>Company</th>
+            <th>Role</th>
+            <th>Location</th>
+            <th>Status</th>
+            <th>Date applied</th>
+            <th>Deadline</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (app of applications(); track app.id) {
+            <tr>
+              <td class="company">
+                @if (app.jobLink) {
+                  <a [href]="app.jobLink" target="_blank" rel="noopener">{{ app.company }}</a>
+                } @else {
+                  {{ app.company }}
+                }
+              </td>
+              <td>{{ app.role }}</td>
+              <td>{{ app.location || '—' }}</td>
+              <td>
+                <span class="status status-{{ app.status.toLowerCase() }}">
+                  {{ statusLabels[app.status] }}
+                </span>
+              </td>
+              <td>{{ (app.dateApplied | date: 'd MMM yyyy') ?? '—' }}</td>
+              <td>{{ (app.deadline | date: 'd MMM yyyy') ?? '—' }}</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+</section>
