@@ -1,86 +1,57 @@
-h2 {
-  margin: 0;
-  font-size: 1.05rem;
-}
-
 /* ---------- Headline numbers ---------- */
 .kpi-row {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 1rem;
-  margin-bottom: 1.25rem;
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
 }
 
 .kpi {
   display: flex;
   flex-direction: column;
-  gap: 0.3rem;
-  padding: 1.15rem 1.25rem;
-}
-
-/* The main number gets the gradient so the eye lands there first. */
-.kpi-hero {
-  border-radius: 14px;
-  background: var(--gradient);
-  color: #fff;
-  box-shadow: 0 8px 24px rgba(124, 58, 237, 0.3);
-}
-
-.kpi-hero .kpi-label {
-  color: rgba(255, 255, 255, 0.85);
-}
-
-.kpi-hero .kpi-value {
-  font-size: 3rem;
+  gap: 0.2rem;
+  padding: 0.95rem 1.1rem;
 }
 
 .kpi-label {
-  font-size: 0.9rem;
+  font-size: 0.78rem;
   font-weight: 500;
   color: var(--text-muted);
 }
 
 .kpi-value {
-  font-size: 2.1rem;
-  font-weight: 800;
-  line-height: 1.05;
+  font-size: 1.75rem;
+  font-weight: 600;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
 }
 
-.kpi-icon {
-  display: grid;
-  place-items: center;
-  width: 36px;
-  height: 36px;
-  margin-bottom: 0.2rem;
-  border-radius: 10px;
-  font-size: 1.05rem;
+.kpi-sub {
+  font-size: 0.75rem;
+  color: var(--text-faint);
 }
-
-.icon-blue  { background: #dceafb; }
-.icon-amber { background: #fdf0cf; }
-.icon-green { background: #d6f3e8; }
 
 /* ---------- Charts ---------- */
 .chart-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 1rem;
-  margin-bottom: 1.25rem;
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
 }
 
 .chart-card {
-  padding: 1.25rem 1.5rem 1.4rem;
+  padding: 1rem 1.1rem 1.1rem;
 }
 
 .chart-note {
-  margin: 0.2rem 0 1.1rem;
-  font-size: 0.85rem;
+  margin: 0.15rem 0 0.9rem;
+  font-size: 0.78rem;
   color: var(--text-muted);
 }
 
 .chart-empty {
   margin: 0;
-  padding: 1.5rem 0;
+  padding: 1.25rem 0;
   text-align: center;
   color: var(--text-muted);
 }
@@ -91,40 +62,40 @@ h2 {
   padding: 0;
   display: flex;
   flex-direction: column;
-  gap: 0.15rem;
+  gap: 0.1rem;
 }
 
 /* Each row is: label | bar | value. The row (not just the thin bar) is the hover target. */
 .bar-row {
   position: relative;
   display: grid;
-  grid-template-columns: 96px 1fr 52px;
+  grid-template-columns: 84px 1fr 44px;
   align-items: center;
-  gap: 0.75rem;
-  padding: 0.4rem 0.5rem;
-  border-radius: 8px;
+  gap: 0.7rem;
+  padding: 0.35rem 0.45rem;
+  border-radius: 6px;
   outline: none;
 }
 
 .bar-row:hover,
 .bar-row:focus-visible {
-  background: var(--surface-alt);
+  background: var(--surface-hover);
 }
 
 .bar-label {
-  font-size: 0.88rem;
-  color: var(--text);
+  font-size: 0.8rem;
+  color: var(--text-muted);
 }
 
 .bar-track {
-  height: 14px;
+  height: 10px;
 }
 
 /* Thin bars, rounded only at the data end (the end that shows the value). */
 .bar {
   display: block;
   height: 100%;
-  min-width: 3px;
+  min-width: 2px;
   border-radius: 0 4px 4px 0;
   transition: width 0.5s ease;
 }
@@ -137,16 +108,16 @@ h2 {
 .fill-rejected   { background: var(--status-rejected); }
 
 .bar-value {
-  font-weight: 700;
+  font-weight: 600;
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
 .bar-value small {
   display: block;
-  font-size: 0.72rem;
-  font-weight: 500;
-  color: var(--text-muted);
+  font-size: 0.68rem;
+  font-weight: 400;
+  color: var(--text-faint);
 }
 
 /* Hover / keyboard-focus tooltip */
@@ -154,15 +125,15 @@ h2 {
   display: none;
   position: absolute;
   z-index: 2;
-  left: 104px;
-  bottom: calc(100% - 4px);
-  padding: 0.4rem 0.65rem;
-  border-radius: 8px;
-  background: var(--text);
-  color: #fff;
-  font-size: 0.8rem;
+  left: 92px;
+  bottom: calc(100% - 2px);
+  padding: 0.35rem 0.6rem;
+  border-radius: 6px;
+  background: #e7e9ee;
+  color: #0b0c0f;
+  font-size: 0.75rem;
   white-space: nowrap;
-  box-shadow: 0 6px 16px rgba(30, 27, 75, 0.25);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5);
   pointer-events: none;
 }
 
@@ -173,16 +144,16 @@ h2 {
 
 /* ---------- Upcoming deadlines ---------- */
 .deadlines-card {
-  padding: 1.25rem 1.5rem;
+  padding: 1rem 1.1rem 0.4rem;
 }
 
 .deadlines-card h2 {
-  margin-bottom: 0.75rem;
+  margin-bottom: 0.5rem;
 }
 
 .deadlines {
   list-style: none;
-  margin: 0;
+  margin: 0 -1.1rem;
   padding: 0;
 }
 
@@ -190,20 +161,15 @@ h2 {
   display: flex;
   align-items: center;
   gap: 1rem;
-  padding: 0.8rem 0.9rem;
-  margin: 0 -0.9rem;
-  border-bottom: 1px solid var(--border);
-  border-left: 3px solid transparent;
-}
-
-.deadlines li:last-child {
-  border-bottom: none;
+  padding: 0.65rem 1.1rem;
+  border-top: 1px solid var(--border);
+  border-left: 2px solid transparent;
 }
 
 /* Due within 3 days: amber edge */
 .deadlines li.urgent {
-  border-left-color: var(--status-interview);
-  background: #fffbeb;
+  border-left-color: #eab308;
+  background: rgba(234, 179, 8, 0.04);
 }
 
 .deadline-main {
@@ -214,15 +180,23 @@ h2 {
 }
 
 .company {
-  font-weight: 700;
+  font-weight: 600;
+}
+
+.company:hover {
+  color: var(--primary-hover);
 }
 
 .deadline-date {
   display: flex;
   flex-direction: column;
   align-items: flex-end;
-  min-width: 90px;
-  font-size: 0.9rem;
+  min-width: 84px;
+  font-size: 0.8rem;
+}
+
+.deadline-date strong {
+  font-weight: 600;
 }
 
 /* ---------- Phones ---------- */

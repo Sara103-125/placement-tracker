@@ -17,7 +17,7 @@
     <!-- cdkDropListGroup lets cards be dragged between any of the columns inside it. -->
     <div class="board" cdkDropListGroup>
       @for (column of columns(); track column.status) {
-        <div class="column column-{{ column.status.toLowerCase() }}">
+        <div class="column">
           <div class="column-header">
             <span class="dot dot-{{ column.status.toLowerCase() }}" aria-hidden="true"></span>
             <span class="column-title">{{ statusLabels[column.status] }}</span>
@@ -38,11 +38,19 @@
 
                 <div class="card-meta">
                   @if (app.location) {
-                    <span>📍 {{ app.location }}</span>
+                    <span class="meta-line">
+                      <svg class="icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                        <path d="M8 14s5-4.2 5-8A5 5 0 0 0 3 6c0 3.8 5 8 5 8Z" /><circle cx="8" cy="6" r="1.75" />
+                      </svg>
+                      {{ app.location }}
+                    </span>
                   }
                   @if (app.deadline) {
-                    <span>
-                      📅 {{ app.deadline | date: 'd MMM' }}
+                    <span class="meta-line">
+                      <svg class="icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                        <rect x="2.5" y="3.5" width="11" height="10" rx="1.5" /><path d="M2.5 6.5h11M5.5 2v3M10.5 2v3" />
+                      </svg>
+                      {{ app.deadline | date: 'd MMM' }}
                       @switch (deadlineAlert(app.deadline, app.status)) {
                         @case ('overdue') { <span class="deadline-alert overdue">Overdue</span> }
                         @case ('soon') { <span class="deadline-alert soon">Soon</span> }

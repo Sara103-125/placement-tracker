@@ -26,11 +26,16 @@ export class Dashboard implements OnInit {
     const s = this.summary();
     if (!s) return null;
     const counts = s.statusCounts;
+    const reached = (status: string) => s.funnel.find((f) => f.status === status)?.count ?? 0;
+    const applied = reached('Applied');
+    const percentOfApplied = (n: number) => (applied === 0 ? 0 : Math.round((n / applied) * 100));
     return {
       total: s.total,
       inProgress: counts.Applied + counts.OnlineTest + counts.Interview,
-      interviews: s.funnel.find((f) => f.status === 'Interview')?.count ?? 0,
+      interviews: reached('Interview'),
+      interviewRate: percentOfApplied(reached('Interview')),
       offers: counts.Offer,
+      offerRate: percentOfApplied(counts.Offer),
     };
   });
 

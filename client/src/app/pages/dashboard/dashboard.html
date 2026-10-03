@@ -14,24 +14,25 @@
 
     <!-- Headline numbers -->
     <div class="kpi-row">
-      <div class="kpi kpi-hero">
+      <div class="kpi card">
         <span class="kpi-label">Total applications</span>
         <span class="kpi-value">{{ k.total }}</span>
+        <span class="kpi-sub">Across all statuses</span>
       </div>
       <div class="kpi card">
-        <span class="kpi-icon icon-blue" aria-hidden="true">⏳</span>
         <span class="kpi-label">In progress</span>
         <span class="kpi-value">{{ k.inProgress }}</span>
+        <span class="kpi-sub">Applied, online test or interview</span>
       </div>
       <div class="kpi card">
-        <span class="kpi-icon icon-amber" aria-hidden="true">💬</span>
         <span class="kpi-label">Reached interview</span>
         <span class="kpi-value">{{ k.interviews }}</span>
+        <span class="kpi-sub">{{ k.interviewRate }}% of applications sent</span>
       </div>
       <div class="kpi card">
-        <span class="kpi-icon icon-green" aria-hidden="true">🎉</span>
         <span class="kpi-label">Offers</span>
         <span class="kpi-value">{{ k.offers }}</span>
+        <span class="kpi-sub">{{ k.offerRate }}% of applications sent</span>
       </div>
     </div>
 
@@ -100,7 +101,7 @@
     <div class="card deadlines-card">
       <h2>Deadlines in the next 7 days</h2>
       @if (summary.upcomingDeadlines.length === 0) {
-        <p class="chart-empty">No deadlines in the next 7 days. 🎉</p>
+        <p class="chart-empty">No deadlines in the next 7 days.</p>
       } @else {
         <ul class="deadlines">
           @for (app of summary.upcomingDeadlines; track app.id) {

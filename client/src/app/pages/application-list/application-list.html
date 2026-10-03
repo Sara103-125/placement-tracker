@@ -55,7 +55,9 @@
             <tr>
               <td class="company">
                 @if (app.jobLink) {
-                  <a [href]="app.jobLink" target="_blank" rel="noopener">{{ app.company }} ↗</a>
+                  <a [href]="app.jobLink" target="_blank" rel="noopener" title="Open job posting">
+                    {{ app.company }}<svg class="link-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M6 3h7v7M13 3 5 11" /></svg>
+                  </a>
                 } @else {
                   {{ app.company }}
                 }

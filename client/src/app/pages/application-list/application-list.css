@@ -1,8 +1,8 @@
 .filters {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.75rem;
-  margin-bottom: 1rem;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
 }
 
 .filters input {
@@ -10,7 +10,7 @@
 }
 
 .filters select {
-  flex: 0 1 200px;
+  flex: 0 1 180px;
 }
 
 /* Lets the table scroll sideways on small screens instead of squashing. */
@@ -25,7 +25,7 @@ table {
 
 th,
 td {
-  padding: 0.8rem 1rem;
+  padding: 0.6rem 0.9rem;
   text-align: left;
   border-bottom: 1px solid var(--border);
   white-space: nowrap;
@@ -40,28 +40,30 @@ th {
 .sort-button {
   display: flex;
   align-items: center;
-  gap: 0.35rem;
+  gap: 0.3rem;
   width: 100%;
-  padding: 0.8rem 1rem;
+  padding: 0.55rem 0.9rem;
   border: none;
   background: none;
   font: inherit;
-  font-size: 0.78rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
+  font-size: 0.75rem;
+  font-weight: 500;
   color: var(--text-muted);
   cursor: pointer;
 }
 
 .sort-button:hover,
 .sort-button.sorted {
-  color: var(--primary);
+  color: var(--text);
 }
 
 .sort-icon {
-  font-size: 0.7rem;
-  opacity: 0.7;
+  font-size: 0.65rem;
+  color: var(--text-faint);
+}
+
+.sort-button.sorted .sort-icon {
+  color: var(--primary-hover);
 }
 
 tbody tr:last-child td {
@@ -69,15 +71,27 @@ tbody tr:last-child td {
 }
 
 tbody tr {
-  transition: background 0.15s;
+  transition: background 0.12s;
 }
 
 tbody tr:hover {
-  background: var(--surface-alt);
+  background: var(--surface-hover);
 }
 
 .company {
   font-weight: 600;
+}
+
+.company a:hover {
+  color: var(--primary-hover);
+}
+
+.link-icon {
+  width: 11px;
+  height: 11px;
+  margin-left: 0.25rem;
+  vertical-align: -1px;
+  color: var(--text-faint);
 }
 
 .actions-col {
@@ -85,5 +99,5 @@ tbody tr:hover {
 }
 
 .actions-col .btn + .btn {
-  margin-left: 0.5rem;
+  margin-left: 0.35rem;
 }

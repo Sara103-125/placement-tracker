@@ -2,7 +2,7 @@
 .board {
   display: grid;
   grid-template-columns: repeat(6, minmax(170px, 1fr));
-  gap: 0.85rem;
+  gap: 0.6rem;
   overflow-x: auto;
   padding-bottom: 0.5rem;
 }
@@ -10,26 +10,20 @@
 .column {
   display: flex;
   flex-direction: column;
-  min-height: 420px;
-  background: var(--surface-alt);
+  min-height: 440px;
+  background: var(--surface);
   border: 1px solid var(--border);
-  border-top: 4px solid var(--column-colour);
-  border-radius: 14px;
+  border-radius: var(--radius);
 }
-
-.column-wishlist   { --column-colour: var(--status-wishlist); }
-.column-applied    { --column-colour: var(--status-applied); }
-.column-onlinetest { --column-colour: var(--status-onlinetest); }
-.column-interview  { --column-colour: var(--status-interview); }
-.column-offer      { --column-colour: var(--status-offer); }
-.column-rejected   { --column-colour: var(--status-rejected); }
 
 .column-header {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  padding: 0.85rem 0.9rem 0.6rem;
-  font-weight: 700;
+  padding: 0.7rem 0.75rem;
+  border-bottom: 1px solid var(--border);
+  font-weight: 600;
+  font-size: 0.82rem;
 }
 
 .column-title {
@@ -37,32 +31,33 @@
 }
 
 .count {
-  min-width: 1.6rem;
-  padding: 0.05rem 0.45rem;
-  border-radius: 999px;
-  background: var(--surface);
-  border: 1px solid var(--border);
-  font-size: 0.8rem;
-  text-align: center;
-  color: var(--text-muted);
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--text-faint);
+  font-variant-numeric: tabular-nums;
 }
 
 .card-list {
   flex: 1;
   display: flex;
   flex-direction: column;
-  gap: 0.6rem;
-  padding: 0.3rem 0.6rem 0.8rem;
+  gap: 0.45rem;
+  padding: 0.55rem;
+  border-radius: 0 0 var(--radius) var(--radius);
+  transition: background 0.15s;
 }
 
 .board-card {
-  padding: 0.75rem 0.85rem;
-  background: var(--surface);
+  padding: 0.6rem 0.7rem;
+  background: var(--surface-alt);
   border: 1px solid var(--border);
-  border-left: 4px solid var(--column-colour, var(--primary));
-  border-radius: 10px;
-  box-shadow: var(--shadow);
+  border-radius: 6px;
   cursor: grab;
+  transition: border-color 0.15s;
+}
+
+.board-card:hover {
+  border-color: var(--border-strong);
 }
 
 .board-card:active {
@@ -70,56 +65,69 @@
 }
 
 .card-company {
-  font-weight: 700;
-  color: var(--text);
+  font-weight: 600;
+}
+
+.card-company:hover {
+  color: var(--primary-hover);
 }
 
 .card-role {
   margin-top: 0.1rem;
-  font-size: 0.88rem;
+  font-size: 0.78rem;
   color: var(--text-muted);
 }
 
 .card-meta {
   display: flex;
   flex-direction: column;
-  gap: 0.2rem;
-  margin-top: 0.5rem;
-  font-size: 0.8rem;
+  gap: 0.15rem;
+  margin-top: 0.45rem;
+  font-size: 0.75rem;
   color: var(--text-muted);
+}
+
+.meta-line {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+}
+
+.meta-line .deadline-alert {
+  margin-left: 0.1rem;
 }
 
 .empty {
   margin: 0;
-  padding: 1.2rem 0;
+  padding: 1rem 0;
   text-align: center;
-  font-size: 0.85rem;
-  color: var(--text-muted);
-  border: 2px dashed var(--border);
-  border-radius: 10px;
+  font-size: 0.75rem;
+  color: var(--text-faint);
+  border: 1px dashed var(--border-strong);
+  border-radius: 6px;
 }
 
 /* --- Drag and drop states (classes added by the Angular CDK) --- */
 
 /* The card that follows the pointer while dragging */
 .cdk-drag-preview {
-  box-shadow: 0 12px 28px rgba(79, 70, 229, 0.3);
-  transform: rotate(2deg);
+  border-color: var(--primary);
+  box-shadow: 0 16px 32px rgba(0, 0, 0, 0.6);
 }
 
 /* The gap where the card will land */
 .drop-placeholder {
-  min-height: 70px;
-  border: 2px dashed var(--primary);
-  border-radius: 10px;
-  background: #eef2ff;
+  min-height: 64px;
+  border: 1px dashed var(--primary);
+  border-radius: 6px;
+  background: var(--primary-soft);
 }
 
 /* A column lights up when a card is dragged over it */
 .card-list.cdk-drop-list-receiving,
 .card-list.cdk-drop-list-dragging {
-  background: rgba(124, 58, 237, 0.05);
-  border-radius: 10px;
+  background: rgba(99, 102, 241, 0.05);
 }
 
 .cdk-drag-animating,
