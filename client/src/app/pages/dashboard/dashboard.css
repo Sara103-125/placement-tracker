@@ -1,0 +1,135 @@
+.page-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+}
+
+h2 {
+  margin: 2rem 0 0.75rem;
+  font-size: 1.05rem;
+}
+
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+}
+
+.label {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-size: 0.9rem;
+  color: var(--text-muted);
+}
+
+/* The one big number the page leads with. */
+.total {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  padding: 1.25rem 1.5rem;
+}
+
+.total-value {
+  font-size: 3rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+/* Six tiles: 3 per row on desktop, 2 on phones. */
+.status-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.75rem;
+}
+
+.stat {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  padding: 1rem 1.25rem;
+}
+
+.stat-value {
+  font-size: 1.75rem;
+  font-weight: 600;
+  line-height: 1.1;
+}
+
+/* Coloured dot next to each status name (same colours as the badges). */
+.dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.dot-wishlist   { background: #64748b; }
+.dot-applied    { background: #2563eb; }
+.dot-onlinetest { background: #7c3aed; }
+.dot-interview  { background: #d97706; }
+.dot-offer      { background: #16a34a; }
+.dot-rejected   { background: #dc2626; }
+
+.deadlines {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.deadlines li {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.85rem 1.25rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.deadlines li:last-child {
+  border-bottom: none;
+}
+
+.deadline-main {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 0;
+}
+
+.company {
+  font-weight: 600;
+}
+
+.deadline-date {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  min-width: 90px;
+  font-size: 0.9rem;
+}
+
+.message {
+  padding: 2rem;
+  text-align: center;
+  color: var(--text-muted);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+}
+
+.message.error {
+  color: var(--danger);
+}
+
+@media (max-width: 600px) {
+  .status-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .deadlines li {
+    flex-wrap: wrap;
+  }
+}

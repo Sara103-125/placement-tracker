@@ -1,7 +1,7 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
-import { JobApplication } from '../models/job-application';
+import { DashboardSummary, JobApplication, JobApplicationRequest } from '../models/job-application';
 
 /**
  * Talks to the .NET API. Components call these methods instead of using HttpClient directly,
@@ -23,5 +23,25 @@ export class ApplicationService {
       params = params.set('status', status);
     }
     return this.http.get<JobApplication[]>(this.baseUrl, { params });
+  }
+
+  getById(id: number): Observable<JobApplication> {
+    return this.http.get<JobApplication>(`${this.baseUrl}/${id}`);
+  }
+
+  create(request: JobApplicationRequest): Observable<JobApplication> {
+    return this.http.post<JobApplication>(this.baseUrl, request);
+  }
+
+  update(id: number, request: JobApplicationRequest): Observable<JobApplication> {
+    return this.http.put<JobApplication>(`${this.baseUrl}/${id}`, request);
+  }
+
+  delete(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.baseUrl}/${id}`);
+  }
+
+  getDashboardSummary(): Observable<DashboardSummary> {
+    return this.http.get<DashboardSummary>('/api/dashboard/summary');
   }
 }

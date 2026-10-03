@@ -1,0 +1,90 @@
+<section class="form-page">
+  <a routerLink="/applications" class="back-link">← Back to applications</a>
+  <h1>{{ editingId === null ? 'Add application' : 'Edit application' }}</h1>
+
+  @if (loading()) {
+    <p class="muted">Loading…</p>
+  } @else if (notFound()) {
+    <p class="form-error">Could not find that application. It may have been deleted.</p>
+  } @else {
+    <form [formGroup]="form" (ngSubmit)="save()" novalidate>
+      <div class="grid">
+        <div class="field">
+          <label for="company">Company *</label>
+          <input id="company" formControlName="company" />
+          @if (showError('company')) {
+            <span class="error">
+              {{ form.controls.company.hasError('maxlength') ? 'Company must be 200 characters or fewer.' : 'Company is required.' }}
+            </span>
+          }
+        </div>
+
+        <div class="field">
+          <label for="role">Role *</label>
+          <input id="role" formControlName="role" />
+          @if (showError('role')) {
+            <span class="error">
+              {{ form.controls.role.hasError('maxlength') ? 'Role must be 200 characters or fewer.' : 'Role is required.' }}
+            </span>
+          }
+        </div>
+
+        <div class="field">
+          <label for="location">Location</label>
+          <input id="location" formControlName="location" placeholder="e.g. London or Remote" />
+          @if (showError('location')) {
+            <span class="error">Location must be 200 characters or fewer.</span>
+          }
+        </div>
+
+        <div class="field">
+          <label for="status">Status *</label>
+          <select id="status" formControlName="status">
+            @for (status of statuses; track status) {
+              <option [value]="status">{{ statusLabels[status] }}</option>
+            }
+          </select>
+        </div>
+
+        <div class="field full">
+          <label for="jobLink">Job link</label>
+          <input id="jobLink" type="url" formControlName="jobLink" placeholder="https://…" />
+          @if (showError('jobLink')) {
+            <span class="error">
+              {{ form.controls.jobLink.hasError('maxlength') ? 'Job link must be 500 characters or fewer.' : 'Enter a full link starting with http:// or https://' }}
+            </span>
+          }
+        </div>
+
+        <div class="field">
+          <label for="dateApplied">Date applied</label>
+          <input id="dateApplied" type="date" formControlName="dateApplied" />
+        </div>
+
+        <div class="field">
+          <label for="deadline">Deadline</label>
+          <input id="deadline" type="date" formControlName="deadline" />
+        </div>
+
+        <div class="field full">
+          <label for="notes">Notes</label>
+          <textarea id="notes" rows="4" formControlName="notes"></textarea>
+          @if (showError('notes')) {
+            <span class="error">Notes must be 4000 characters or fewer.</span>
+          }
+        </div>
+      </div>
+
+      @if (errorMessage()) {
+        <p class="form-error">{{ errorMessage() }}</p>
+      }
+
+      <div class="actions">
+        <a routerLink="/applications" class="btn btn-secondary">Cancel</a>
+        <button type="submit" class="btn btn-primary" [disabled]="saving()">
+          {{ saving() ? 'Saving…' : 'Save' }}
+        </button>
+      </div>
+    </form>
+  }
+</section>

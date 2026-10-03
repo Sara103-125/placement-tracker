@@ -28,3 +28,13 @@ export interface JobApplication {
   createdAt: string;
   updatedAt: string;
 }
+
+// What we send to POST / PUT. The server sets id, createdAt and updatedAt itself.
+export type JobApplicationRequest = Omit<JobApplication, 'id' | 'createdAt' | 'updatedAt'>;
+
+// Shape of GET /api/dashboard/summary.
+export interface DashboardSummary {
+  total: number;
+  statusCounts: Record<ApplicationStatus, number>;
+  upcomingDeadlines: JobApplication[];
+}

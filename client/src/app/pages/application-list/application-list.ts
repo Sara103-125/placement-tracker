@@ -1,12 +1,13 @@
 import { DatePipe } from '@angular/common';
 import { Component, OnInit, computed, inject, signal } from '@angular/core';
+import { RouterLink } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { JobApplication, STATUS_LABELS, STATUSES } from '../../models/job-application';
 import { ApplicationService } from '../../services/application.service';
 
 @Component({
   selector: 'app-application-list',
-  imports: [DatePipe],
+  imports: [DatePipe, RouterLink],
   templateUrl: './application-list.html',
   styleUrl: './application-list.css',
 })
@@ -38,6 +39,19 @@ export class ApplicationList implements OnInit {
   protected onStatusChange(value: string): void {
     this.status.set(value);
     this.loadApplications();
+  }
+
+  protected deleteApplication(app: JobApplication): void {
+    // The browser's built-in confirm box: returns true for OK, false for Cancel.
+    if (!confirm(`Delete ${app.company} – ${app.role}? This cannot be undone.`)) {
+      return;
+    }
+
+    this.applicationService.delete(app.id).subscribe({
+      // Remove the row locally instead of reloading the whole list.
+      next: () => this.applications.update((list) => list.filter((a) => a.id !== app.id)),
+      error: () => alert('Could not delete the application. Please try again.'),
+    });
   }
 
   private loadApplications(): void {

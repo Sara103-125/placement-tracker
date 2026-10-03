@@ -1,7 +1,10 @@
 <section>
   <div class="page-header">
-    <h1>Applications</h1>
-    <span class="muted">{{ applications().length }} shown</span>
+    <div>
+      <h1>Applications</h1>
+      <span class="muted">{{ applications().length }} shown</span>
+    </div>
+    <a routerLink="/applications/new" class="btn btn-primary">+ Add application</a>
   </div>
 
   <div class="filters">
@@ -40,6 +43,7 @@
             <th>Status</th>
             <th>Date applied</th>
             <th>Deadline</th>
+            <th class="actions-col"><span class="visually-hidden">Actions</span></th>
           </tr>
         </thead>
         <tbody>
@@ -61,6 +65,10 @@
               </td>
               <td>{{ (app.dateApplied | date: 'd MMM yyyy') ?? '—' }}</td>
               <td>{{ (app.deadline | date: 'd MMM yyyy') ?? '—' }}</td>
+              <td class="actions-col">
+                <a [routerLink]="['/applications', app.id, 'edit']" class="btn btn-small btn-secondary">Edit</a>
+                <button type="button" class="btn btn-small btn-danger" (click)="deleteApplication(app)">Delete</button>
+              </td>
             </tr>
           }
         </tbody>

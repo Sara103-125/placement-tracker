@@ -1,8 +1,13 @@
 import { Routes } from '@angular/router';
+import { ApplicationForm } from './pages/application-form/application-form';
 import { ApplicationList } from './pages/application-list/application-list';
+import { Dashboard } from './pages/dashboard/dashboard';
 
 export const routes: Routes = [
-  { path: '', redirectTo: 'applications', pathMatch: 'full' },
+  { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
+  { path: 'dashboard', component: Dashboard },
   { path: 'applications', component: ApplicationList },
-  { path: '**', redirectTo: 'applications' },
+  { path: 'applications/new', component: ApplicationForm },
+  { path: 'applications/:id/edit', component: ApplicationForm },
+  { path: '**', redirectTo: 'dashboard' },
 ];
