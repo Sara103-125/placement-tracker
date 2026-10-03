@@ -1,18 +1,15 @@
 namespace PlacementTracker.Api.Entities;
 
 /// <summary>
-/// One placement/internship application belonging to a single user.
+/// One placement/internship application.
 /// Named JobApplication so it is not confused with the ASP.NET "application".
 /// </summary>
 public class JobApplication
 {
-    public Guid Id { get; set; }
+    public int Id { get; set; }
 
-    public string UserId { get; set; } = default!;
-    public ApplicationUser User { get; set; } = default!;
-
-    public string Company { get; set; } = default!;
-    public string Role { get; set; } = default!;
+    public string Company { get; set; } = string.Empty;
+    public string Role { get; set; } = string.Empty;
     public string? Location { get; set; }
     public string? JobLink { get; set; }
 
